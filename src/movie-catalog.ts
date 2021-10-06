@@ -1,3 +1,6 @@
+import { Router } from '@vaadin/router';
+import { css, html, LitElement } from 'lit';
+import { customElement, query } from 'lit/decorators.js';
 import './components/overlay-menu.js';
 import './views/home-page.js';
 import './views/movie-list.js';
@@ -6,13 +9,11 @@ import './views/my-profile.js';
 import './views/search-view.js';
 import './views/tv-shows.js';
 
-import { Router } from '@vaadin/router';
-import { css, html, LitElement } from 'lit';
-import { customElement, query } from 'lit/decorators.js';
-
 @customElement('movie-catalog')
 export class MovieCatalog extends LitElement {
   @query('#outlet') outlet!: HTMLDivElement;
+
+  @query('overlay-menu') overlayMenu!: any;
 
   static styles = css`
     :host {
@@ -71,11 +72,26 @@ export class MovieCatalog extends LitElement {
   show = false;
 
   onOpenMenu() {
+    /* Tryed to push the menu modal by injecting the component in the DOM
+    and later removing it, but its not working!
+    // this.show = true;
+    */
+
     /*     const template = html`<overlay-menu></overlay-menu>`;
-    const part = render(template, this.parentNode); */
+    render(template, document.body);
+    // this.overlayMenu.onOpen();
+    */
 
     this.show = true;
+    this.requestUpdate();
   }
+
+  onCloseModal() {
+    this.show = false;
+    this.requestUpdate();
+  }
+
+  ovrTemplate = html`<overlay-menu></overlay-menu>`;
 
   render() {
     return html`
@@ -94,7 +110,14 @@ export class MovieCatalog extends LitElement {
 
       <p class="app-footer">Movie Ctalog</p>
 
-      <overlay-menu></overlay-menu>
+      ${this.show
+        ? html`<overlay-menu
+            ?show="${this.show}"
+            @closeModal=${this.onCloseModal}
+          ></overlay-menu>`
+        : ''}
     `;
   }
 }
+/*
+<overlay-menu ?show="${this.show}"></overlay-menu> */

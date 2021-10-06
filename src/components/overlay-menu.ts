@@ -1,8 +1,10 @@
 import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
 @customElement('overlay-menu')
 export class OverlayMenu extends LitElement {
+  @property({ type: Boolean }) show = true;
+
   static styles = css`
     *,
     *::after,
@@ -85,15 +87,39 @@ export class OverlayMenu extends LitElement {
     { path: 'my-profile', label: 'Mi Perfil' },
   ];
 
+  onOpen() {
+    this.show = true;
+  }
+
   onClose() {
-    this.parentNode?.removeChild(this);
+    /*     if (this.previousSibling) {
+      this.parentNode?.removeChild(this.previousSibling);
+    }
+
+    if (this.parentNode) {
+      this.parentNode.removeChild(this);
+    } */
+    // document.body.removeChild(this);
+    //  (this.parentNode as MovieCatalog).show = false;
+
+    // this.show = false;
+    // this.requestUpdate();
+    // this.show = false;
+
+    const options = {
+      detail: { close: true },
+      bubbles: true,
+      composed: true,
+    };
+
+    this.dispatchEvent(new CustomEvent('closeModal', options));
   }
 
   render() {
     return html`
       <div class="modal active" id="modal">
         <div class="modal-header">
-          <div class="title">Example Modal</div>
+          <div class="title">Menu</div>
           <button
             data-close-button
             class="close-button"
@@ -112,3 +138,25 @@ export class OverlayMenu extends LitElement {
     `;
   }
 }
+/*
+ return html`
+<div class="modal ${this.show ? 'active' : ''}" id="modal">
+  <div class="modal-header">
+    <div class="title">Menu</div>
+    <button
+      data-close-button
+      class="close-button"
+      @click="${this.onClose}"
+    >
+      &times;
+    </button>
+  </div>
+  <nav class="modal-body">
+    ${this.views.map(
+      ({ path, label }) => html`<a href="${path}">${label}</a>`
+    )}
+  </nav>
+</div>
+<div id="overlay" class="${this.show ? 'active' : ''}"></div>
+`;
+*/
