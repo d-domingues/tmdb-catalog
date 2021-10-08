@@ -1,3 +1,4 @@
+/* eslint-disable import/no-duplicates */
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
 import '../src/movie-catalog.js';
@@ -5,14 +6,15 @@ import { MovieCatalog } from '../src/movie-catalog.js';
 
 describe('MovieCatalog', () => {
   let element: MovieCatalog;
+
   beforeEach(async () => {
     element = await fixture(html`<movie-catalog></movie-catalog>`);
   });
 
-  it('renders a h1', () => {
-    const h1 = element.shadowRoot!.querySelector('h1')!;
-    expect(h1).to.exist;
-    expect(h1.textContent).to.equal('Movie Catalog');
+  it('footer text', () => {
+    const footer = element.shadowRoot!.querySelector('footer')!;
+    expect(footer).to.exist;
+    expect(footer.textContent).to.equal('Movie Catalog');
   });
 
   it('passes the a11y audit', async () => {

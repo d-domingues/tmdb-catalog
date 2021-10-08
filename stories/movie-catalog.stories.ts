@@ -16,15 +16,12 @@ interface Story<T> {
 }
 
 interface ArgTypes {
-  title?: string;
   backgroundColor?: string;
 }
 
-const Template: Story<ArgTypes> = ({ title, backgroundColor = 'white' }: ArgTypes) => html`
-  <movie-catalog style="--movie-catalog-background-color: ${backgroundColor}" .title=${title}></movie-catalog>
+const Template: Story<ArgTypes> = ({ backgroundColor = 'white' }: ArgTypes) => html`
+  <movie-catalog style="--movie-catalog-background-color: ${backgroundColor}"></movie-catalog>
 `;
 
 export const App = Template.bind({});
-App.args = {
-  title: 'My app',
-};
+App.args = {};
