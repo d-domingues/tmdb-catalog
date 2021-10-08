@@ -1,74 +1,46 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { MovieCatalog } from '../movie-catalog.js';
 
 @customElement('overlay-menu')
 export class OverlayMenu extends LitElement {
-  @property({ type: Boolean }) show = true;
-
   static styles = css`
-    *,
-    *::after,
-    *::before {
-      box-sizing: border-box;
-    }
-
-    .modal {
+    #modal {
       position: fixed;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      transition: 200ms ease-in-out;
-      border: 1px solid black;
-      border-radius: 10px;
       z-index: 10;
-      background-color: white;
-      width: 500px;
-      max-width: 80%;
+      /* animation */
+      transition: all 200ms ease-in-out 0s;
+      transform: translate(-50%, -50%) scale(0);
     }
 
-    .modal.active {
+    #modal.active {
       transform: translate(-50%, -50%) scale(1);
     }
 
-    .modal-header {
-      padding: 10px 15px;
+    nav {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid black;
+      flex-direction: column;
+      gap: 1vh;
+      text-align: center;
     }
 
-    .modal-header .title {
-      font-size: 1.25rem;
-      font-weight: bold;
-    }
-
-    .modal-header .close-button {
-      cursor: pointer;
-      border: none;
-      outline: none;
-      background: none;
-      font-size: 1.25rem;
-      font-weight: bold;
-    }
-
-    .modal-body {
-      padding: 10px 15px;
-    }
-
-    .modal-body a {
+    nav a {
       display: block;
+      text-decoration: none;
+      color: white;
+      font-size: 4vh;
+      margin: 4px;
     }
 
     #overlay {
       position: fixed;
-      opacity: 0;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      /* animation */
       transition: 200ms ease-in-out;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.5);
+      opacity: 0;
       pointer-events: none;
     }
 
@@ -78,8 +50,12 @@ export class OverlayMenu extends LitElement {
     }
   `;
 
+  @property({ type: Boolean }) show = false;
+
+  readonly parent = document.querySelector('movie-catalog');
+
   views = [
-    { path: '/movies-home', label: 'Inicio' },
+    { path: '/home-page', label: 'Inicio' },
     { path: '/search-view', label: 'Buscador' },
     { path: '/tv-shows', label: 'Series TV' },
     { path: '/movie-list', label: 'Peliculas' },
@@ -87,76 +63,18 @@ export class OverlayMenu extends LitElement {
     { path: 'my-profile', label: 'Mi Perfil' },
   ];
 
-  onOpen() {
-    this.show = true;
-  }
-
   onClose() {
-    /*     if (this.previousSibling) {
-      this.parentNode?.removeChild(this.previousSibling);
+    if (this.parent instanceof MovieCatalog) {
+      this.parent.show = false;
     }
-
-    if (this.parentNode) {
-      this.parentNode.removeChild(this);
-    } */
-    // document.body.removeChild(this);
-    //  (this.parentNode as MovieCatalog).show = false;
-
-    // this.show = false;
-    // this.requestUpdate();
-    // this.show = false;
-
-    const options = {
-      detail: { close: true },
-      bubbles: true,
-      composed: true,
-    };
-
-    this.dispatchEvent(new CustomEvent('closeModal', options));
   }
 
   render() {
     return html`
-      <div class="modal active" id="modal">
-        <div class="modal-header">
-          <div class="title">Menu</div>
-          <button
-            data-close-button
-            class="close-button"
-            @click="${this.onClose}"
-          >
-            &times;
-          </button>
-        </div>
-        <nav class="modal-body">
-          ${this.views.map(
-            ({ path, label }) => html`<a href="${path}">${label}</a>`
-          )}
-        </nav>
+      <div id="modal" class=${this.show ? 'active' : ''}>
+        <nav>${this.views.map(({ path, label }) => html` <a href=${path} @click=${this.onClose}> ${label} </a> `)}</nav>
       </div>
-      <div id="overlay" class="active"></div>
+      <div id="overlay" class=${this.show ? 'active' : ''}></div>
     `;
   }
 }
-/*
- return html`
-<div class="modal ${this.show ? 'active' : ''}" id="modal">
-  <div class="modal-header">
-    <div class="title">Menu</div>
-    <button
-      data-close-button
-      class="close-button"
-      @click="${this.onClose}"
-    >
-      &times;
-    </button>
-  </div>
-  <nav class="modal-body">
-    ${this.views.map(
-      ({ path, label }) => html`<a href="${path}">${label}</a>`
-    )}
-  </nav>
-</div>
-<div id="overlay" class="${this.show ? 'active' : ''}"></div>
-`;
-*/
