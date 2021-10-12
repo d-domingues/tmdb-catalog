@@ -1,47 +1,25 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
-import { TmdbMovie } from '../../models/tmdb-movie.js';
+import { isMovie, TmdbMovie } from '../../models/tmdb-movie.js';
+import { TmdbTvShow } from '../../models/tmdb-tv-show.js';
 import { imgBackdropSrc } from '../tmdb.api.js';
 
 @customElement('carousel-component')
 export class CarouselComponent extends LitElement {
   static styles = css`
-    .slideshow-container {
+    #slideshow-container {
       position: relative;
+      padding-top: 8px;
     }
 
-    #backdrop-img {
+    .backdrop-img {
       width: 100%;
       box-shadow: rgb(0 0 0 / 40%) 0px 2px 4px, rgb(0 0 0 / 30%) 0px 7px 13px -3px, rgb(0 0 0 / 20%) 0px -3px 0px inset;
     }
 
-    .prev,
-    .next {
-      cursor: pointer;
-      position: absolute;
-      top: 50%;
-      padding: 16px;
-      margin-top: -22px;
-      color: white;
-      font-weight: bold;
-      font-size: 18px;
-      transition: 0.6s ease;
-      border-radius: 0 3px 3px 0;
-      user-select: none;
-    }
-
-    .next {
-      right: 0;
-      border-radius: 3px 0 0 3px;
-    }
-
-    .prev:hover,
-    .next:hover {
-      background-color: rgba(0, 0, 0, 0.8);
-    }
-
-    #title,
+    .title,
     .slide-btns {
       color: #f2f2f2;
       font-size: 15px;
@@ -51,17 +29,25 @@ export class CarouselComponent extends LitElement {
       text-align: center;
     }
 
-    #title {
-      top: 8px;
-      left: 50%;
-      transform: translateX(-50%);
+    .title {
+      position: absolute;
+      top: 10px;
+      padding: 10px;
+      color: white;
+      font-size: 16px;
+      border-radius: 10px 0px 0px 10px;
+      user-select: none;
+      background-color: rgba(0, 0, 0, 0.4);
+      right: 0px;
       width: auto;
-      border-radius: 3px;
-      background: #00000066;
     }
 
     .slide-btns {
       bottom: 8px;
+      width: fit-content;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     .slide-btns button {
@@ -78,53 +64,57 @@ export class CarouselComponent extends LitElement {
     }
   `;
 
-  @property() slides: TmdbMovie[] = [];
+  @property() slides: (TmdbMovie | TmdbTvShow)[] = [];
 
   @state() slideIdx = 0;
 
-  intervalId: any;
+  private intervalId!: NodeJS.Timeout;
 
   constructor() {
     super();
-    this.restartInterval();
+    this.restartInterval(0);
   }
 
-  setSlide(idx: number) {
-    this.slideIdx = idx;
-    this.restartInterval();
-  }
-
-  restartInterval() {
+  disconnectedCallback() {
+    super.disconnectedCallback();
     clearInterval(this.intervalId);
+  }
+
+  restartInterval(val: number) {
+    clearInterval(this.intervalId);
+
+    this.slideIdx = val;
 
     this.intervalId = setInterval(() => {
       this.slideIdx = (this.slideIdx + 1) % this.slides.length;
     }, 5000);
   }
 
-  slideTmpl(src: TmdbMovie, idx: number) {
-    const slyles = { display: this.slideIdx === idx ? 'block' : 'none' };
+  slideTmpl(src: TmdbMovie | TmdbTvShow, idx: number) {
+    const slyles = { position: 'relative', display: this.slideIdx === idx ? 'block' : 'none' };
 
     return html`
-      <div style=${styleMap(slyles)}>
-        <span id="title">${src.original_title}</span>
-        <img id="backdrop-img" src=${imgBackdropSrc(src)} alt="movie backdrop" />
+      <div active=${this.slideIdx === idx} style=${styleMap(slyles)}>
+        <span class="title">${isMovie(src) ? src.title : src.name}</span>
+        <img class="backdrop-img" src=${imgBackdropSrc(src)} alt="movie backdrop" />
       </div>
     `;
   }
 
   render() {
     return html`
-      <div class="slideshow-container">
+      <div id="slideshow-container">
         ${this.slides.map((s, idx) => this.slideTmpl(s, idx))}
-        <!--
-        <span class="prev">&#10094;</span>
-        <span class="next">&#10095;</span>
-        -->
 
         <div class="slide-btns">
           ${this.slides.map(
-            (s, idx) => html`<button class=${idx === this.slideIdx ? 'active' : ''} @click=${() => this.setSlide(idx)}></button>`
+            (_, idx) =>
+              html`
+                <button
+                  class=${classMap({ active: idx === this.slideIdx })}
+                  @click=${() => this.restartInterval(idx)}
+                ></button>
+              `
           )}
         </div>
       </div>

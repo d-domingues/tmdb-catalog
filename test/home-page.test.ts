@@ -1,4 +1,3 @@
-/* eslint-disable import/no-duplicates */
 import { elementUpdated, expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
 import '../src/views/home-page.js';
