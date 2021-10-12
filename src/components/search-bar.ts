@@ -1,11 +1,12 @@
+import { Router } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, query } from 'lit/decorators.js';
 import { debounce, DebouncedFunc } from 'lodash-es';
 
 @customElement('search-bar')
 export class SearchBar extends LitElement {
   static styles = css`
-    input[type='text'] {
+    input#search-input {
       width: 100%;
       box-sizing: border-box;
       border: 2px solid #333333;
@@ -20,13 +21,13 @@ export class SearchBar extends LitElement {
       text-indent: 24px;
     }
 
-    input[type='text']:focus {
+    input#search-input:focus {
       border-bottom: none;
     }
   `;
 
   @property() debounce = 300;
-
+  @query('#search-input') searchInput!: HTMLInputElement;
   handleInput!: DebouncedFunc<(e: any) => Promise<void>>;
 
   firstUpdated() {
@@ -41,7 +42,22 @@ export class SearchBar extends LitElement {
     }, this.debounce);
   }
 
+  onSearch(ev: KeyboardEvent) {
+    const searchQuery = this.searchInput?.value?.trim();
+
+    if (ev.key === 'Enter' && searchQuery) {
+      Router.go(`search-view/${searchQuery}`);
+    }
+  }
+
   render() {
-    return html` <input type="text" placeholder="Buscar..." @input=${(e: any) => this.handleInput(e)} /> `;
+    return html`
+      <input
+        id="search-input"
+        placeholder="Buscar..."
+        @input=${(e: any) => this.handleInput(e)}
+        @keyup=${this.onSearch}
+      />
+    `;
   }
 }

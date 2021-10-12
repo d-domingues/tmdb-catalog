@@ -1,7 +1,3 @@
-import { Router } from '@vaadin/router';
-import { css, html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-import { ref } from 'lit/directives/ref.js';
 import './components/overlay-menu.js';
 import './views/home-page.js';
 import './views/movie-list.js';
@@ -10,18 +6,11 @@ import './views/my-profile.js';
 import './views/search-view.js';
 import './views/tv-shows.js';
 
-function setRoutes(outlet: Element | undefined) {
-  new Router(outlet).setRoutes([
-    { path: '/', redirect: '/home-page' },
-    { path: '/home-page', component: 'home-page' },
-    { path: '/search-view', component: 'search-view' },
-    { path: '/movie-search', component: 'movie-search' },
-    { path: '/tv-shows', component: 'tv-shows' },
-    { path: '/movie-list', component: 'movie-list' },
-    { path: '/my-list', component: 'my-list' },
-    { path: '/my-profile', component: 'my-profile' },
-  ]);
-}
+import { css, html, LitElement } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { ref } from 'lit/directives/ref.js';
+
+import { setRouter } from './router.js';
 
 @customElement('movie-catalog')
 export class MovieCatalog extends LitElement {
@@ -96,7 +85,7 @@ export class MovieCatalog extends LitElement {
         ${!this.show &&
         html`<img src="assets/menu-icon.svg" alt="MENU" @click=${this.onOpenMenu} @keydown=${this.onOpenMenu} />`}
       </header>
-      <main ${ref(setRoutes)}></main>
+      <main ${ref(setRouter)}></main>
       <footer>
         Movie Catalog<br />
         Sopra Steria Lit Challenge using

@@ -1,12 +1,14 @@
+import './search-bar.js';
+import './suggestion-option.js';
+
 import { css, html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { repeat } from 'lit/directives/repeat.js';
+
 import { TmdbMovie } from '../../models/tmdb-movie.js';
 import { TmdbTvShow } from '../../models/tmdb-tv-show.js';
 import { fetchSearchMovies } from '../tmdb.api';
-import './search-bar.js';
-import './suggestion-option.js';
 
 @customElement('typeahead-input')
 export class TypeaheadInput extends LitElement {
@@ -37,10 +39,9 @@ export class TypeaheadInput extends LitElement {
   `;
 
   @state() results: (TmdbMovie | TmdbTvShow)[] = [];
-
   @state() showSuggestions = false;
-
   @state() currentSuggIdx = 0;
+  @query('#search-input') searchInput!: HTMLInputElement;
 
   async handleInput(ev: CustomEvent) {
     if (!ev.detail.trim()) {

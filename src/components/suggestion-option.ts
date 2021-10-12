@@ -1,3 +1,5 @@
+import './star-rating.js';
+
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
@@ -30,18 +32,6 @@ export class SuggestionOption extends LitElement {
 
   @property() item!: TmdbMovie | TmdbTvShow;
 
-  starTmpl = (item: any, idx: number) => {
-    if (item.vote_average - (idx + 1) * 2 >= 0) {
-      return html`<img class="star" src="assets/gold-star.svg" alt="" />`;
-    }
-
-    if (item.vote_average - ((idx + 1) * 2 - 1) >= 0) {
-      return html`<img class="star" src="assets/half-star.svg" alt="" />`;
-    }
-
-    return html`<img class="star" src="assets/shade-star.svg" alt="" />`;
-  };
-
   getDate() {
     const strDate = isMovie(this.item) ? this.item.release_date : this.item.first_air_date;
     return strDate ? `(${strDate.split('-')[0]})` : '';
@@ -55,9 +45,7 @@ export class SuggestionOption extends LitElement {
     return html`
       <img class="movie-img" src=${imgPosterSrc(this.item, 'w45')} alt="" />
       <span> ${isMovie(this.item) ? this.item.title : this.item.name} ${this.getDate()} </span>
-      <span>
-        ${this.item.vote_average} ${Array.from({ length: 5 }).map((_, starIdx) => this.starTmpl(this.item, starIdx))}
-      </span>
+      <star-rating rating=${this.item.vote_average}></star-rating>
     `;
   }
 }

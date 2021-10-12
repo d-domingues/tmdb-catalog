@@ -84,7 +84,7 @@ export async function fechHomePageData(): Promise<HomePageVM> {
   return { carousel, recentMovies, tvShows };
 }
 
-export async function fetchSearchMovies(query: string) {
+export async function fetchSearchMovies(query: string, page = 0) {
   let data: TmdbMovie[] = [];
 
   try {
@@ -93,9 +93,32 @@ export async function fetchSearchMovies(query: string) {
       api_key: 'a7aed79b85b4769070e70428a435f4bb',
       include_adult: 'false',
       sort_by: 'popularity.desc',
+      page: `${page}`,
     }).toString();
 
     const req = await fetch(`https://api.themoviedb.org/3/search/movie?${params}`);
+    const { results } = await req.json();
+    data = results;
+  } catch (error) {
+    return [];
+  }
+
+  return data;
+}
+
+export async function fetchSearchTv(query: string, page = 0) {
+  let data: TmdbMovie[] = [];
+
+  try {
+    const params = new URLSearchParams({
+      query,
+      api_key: 'a7aed79b85b4769070e70428a435f4bb',
+      include_adult: 'false',
+      sort_by: 'popularity.desc',
+      page: `${page}`,
+    }).toString();
+
+    const req = await fetch(`https://api.themoviedb.org/3/search/tv?${params}`);
     const { results } = await req.json();
     data = results;
   } catch (error) {
