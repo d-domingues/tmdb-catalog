@@ -3,7 +3,23 @@ import { customElement, property } from 'lit/decorators.js';
 
 @customElement('star-rating')
 export class StarRating extends LitElement {
-  static styles = css``;
+  static styles = css`
+    :host {
+      white-space: nowrap;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+    }
+
+    .rating {
+      font-size: max(1.5vw, 10px);
+      margin-right: 5px;
+    }
+
+    .star {
+      width: max(1.5vw, 12px);
+    }
+  `;
 
   @property() rating = 0;
 
@@ -24,6 +40,9 @@ export class StarRating extends LitElement {
       return '';
     }
 
-    return html`${this.rating} ${Array.from({ length: 5 }).map((_, starIdx) => this.starTmpl(starIdx))}`;
+    return html`
+      <span class="rating">${this.rating}</span>
+      ${Array.from({ length: 5 }).map((_, starIdx) => this.starTmpl(starIdx))}
+    `;
   }
 }

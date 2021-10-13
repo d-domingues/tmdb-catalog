@@ -35,7 +35,7 @@ export class MovieCard extends LitElement {
     }
 
     return html`
-      <img src=${imgPosterSrc(this.item, 'w300')} alt="" />
+      ${this.item.poster_path && html`<img src=${imgPosterSrc(this.item, 'w300')} alt="" />`}
       <star-rating rating=${this.item.vote_average}></star-rating>
     `;
   }

@@ -84,7 +84,7 @@ export async function fechHomePageData(): Promise<HomePageVM> {
   return { carousel, recentMovies, tvShows };
 }
 
-export async function fetchSearchMovies(query: string, page = 0) {
+export async function fetchSearchMovies(query: string, page = 1) {
   let data: TmdbMovie[] = [];
 
   try {
@@ -106,7 +106,7 @@ export async function fetchSearchMovies(query: string, page = 0) {
   return data;
 }
 
-export async function fetchSearchTv(query: string, page = 0) {
+export async function fetchSearchTv(query: string, page = 1) {
   let data: TmdbMovie[] = [];
 
   try {

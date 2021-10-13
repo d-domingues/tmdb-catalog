@@ -16,9 +16,10 @@ export class SearchView extends LitElement {
       outline: none;
       padding: 10px 40px;
       cursor: pointer;
-      background: lightskyblue;
-      border: solid 2px cornflowerblue;
+      background: cornflowerblue;
+      border: 2px solid royalblue;
       border-radius: 6px;
+      color: white;
     }
 
     button:nth-child(2) {

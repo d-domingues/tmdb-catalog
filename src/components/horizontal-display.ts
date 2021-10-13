@@ -12,8 +12,9 @@ export class HorizontalDisplay extends LitElement {
     :host {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      grid-gap: 1%;
-      align-items: center;
+      grid-gap: 20px 8px;
+      align-items: end;
+      margin: 30px 0;
     }
 
     h5 {
