@@ -2,9 +2,10 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
+
 import { isMovie, TmdbMovie } from '../../models/tmdb-movie.js';
 import { TmdbTvShow } from '../../models/tmdb-tv-show.js';
-import { imgBackdropSrc } from '../tmdb.api.js';
+import { imgSrc } from '../directives/img-directive.js';
 
 @customElement('carousel-component')
 export class CarouselComponent extends LitElement {
@@ -16,7 +17,8 @@ export class CarouselComponent extends LitElement {
 
     .backdrop-img {
       width: 100%;
-      box-shadow: rgb(0 0 0 / 40%) 0px 2px 4px, rgb(0 0 0 / 30%) 0px 7px 13px -3px, rgb(0 0 0 / 20%) 0px -3px 0px inset;
+      box-shadow: rgb(0 0 0 / 40%) 0px 2px 4px, rgb(0 0 0 / 30%) 0px 7px 13px -3px,
+        rgb(0 0 0 / 20%) 0px -3px 0px inset;
     }
 
     .title,
@@ -64,7 +66,7 @@ export class CarouselComponent extends LitElement {
     }
   `;
 
-  @property() slides: (TmdbMovie | TmdbTvShow)[] = [];
+  @property({ type: Array }) slides: (TmdbMovie | TmdbTvShow)[] = [];
 
   @state() slideIdx = 0;
 
@@ -90,13 +92,13 @@ export class CarouselComponent extends LitElement {
     }, 5000);
   }
 
-  slideTmpl(src: TmdbMovie | TmdbTvShow, idx: number) {
+  slideTmpl(item: TmdbMovie | TmdbTvShow, idx: number) {
     const slyles = { position: 'relative', display: this.slideIdx === idx ? 'block' : 'none' };
 
     return html`
       <div active=${this.slideIdx === idx} style=${styleMap(slyles)}>
-        <span class="title">${isMovie(src) ? src.title : src.name}</span>
-        <img class="backdrop-img" src=${imgBackdropSrc(src)} alt="movie backdrop" />
+        <span class="title">${isMovie(item) ? item.title : item.name}</span>
+        <img class="backdrop-img" src="${imgSrc(item.backdrop_path)} " alt="" />
       </div>
     `;
   }

@@ -2,8 +2,6 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
-import { MovieCatalog } from '../movie-catalog.js';
-
 @customElement('overlay-menu')
 export class OverlayMenu extends LitElement {
   static styles = css`
@@ -82,8 +80,8 @@ export class OverlayMenu extends LitElement {
     { path: 'my-profile', label: 'Mi Perfil' },
   ];
 
-  onClose() {
-    if (this.parent instanceof MovieCatalog) {
+  async onClose() {
+    if (this.parent instanceof (await import('../movie-catalog.js')).MovieCatalog) {
       this.parent.show = false;
     }
   }
@@ -91,7 +89,9 @@ export class OverlayMenu extends LitElement {
   render() {
     return html`
       <nav id="modal" class=${classMap({ active: this.show })}>
-        ${this.views.map(({ path, label }) => html` <a href=${path} @click=${this.onClose}> ${label} </a> `)}
+        ${this.views.map(
+          ({ path, label }) => html` <a href=${path} @click=${this.onClose}> ${label} </a> `
+        )}
       </nav>
 
       <div id="overlay" class=${classMap({ active: this.show })}>

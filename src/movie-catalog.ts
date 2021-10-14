@@ -6,7 +6,7 @@ import './views/my-profile.js';
 import './views/search-view.js';
 import './views/tv-shows.js';
 
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ref } from 'lit/directives/ref.js';
 
@@ -41,7 +41,7 @@ export class MovieCatalog extends LitElement {
     }
 
     main {
-      max-width: 960px;
+      max-width: 1000px;
       margin: 50px auto 40px;
     }
 
@@ -57,7 +57,6 @@ export class MovieCatalog extends LitElement {
     /* Responsive for mobile devices */
     @media only screen and (max-width: 600px) {
       main {
-        /* --top-pad: 54px; */
         margin: 58px 8px 28px;
       }
     }
@@ -78,13 +77,23 @@ export class MovieCatalog extends LitElement {
     this.shadowRoot?.removeChild(tag); */
   }
 
+  menuIconTmpl() {
+    return this.show
+      ? nothing
+      : html`
+          <img
+            src="assets/menu-icon.svg"
+            alt="MENU"
+            @click=${this.onOpenMenu}
+            @keydown=${this.onOpenMenu}
+          />
+        `;
+  }
+
   render() {
     return html`
       <overlay-menu .show=${this.show}></overlay-menu>
-      <header>
-        ${!this.show &&
-        html`<img src="assets/menu-icon.svg" alt="MENU" @click=${this.onOpenMenu} @keydown=${this.onOpenMenu} />`}
-      </header>
+      <header>${this.menuIconTmpl()}</header>
       <main ${ref(setRouter)}></main>
       <footer>
         Movie Catalog<br />

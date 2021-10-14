@@ -2,20 +2,6 @@ import { HomePageVM } from '../models/home-page-vm.js';
 import { TmdbMovie } from '../models/tmdb-movie.js';
 import { TmdbTvShow } from '../models/tmdb-tv-show.js';
 
-export function imgBackdropSrc(
-  movie: TmdbMovie | TmdbTvShow,
-  size: 'w300' | 'w780' | '1280' | 'original' = 'original'
-) {
-  return `https://image.tmdb.org/t/p/${size}${movie.backdrop_path}`;
-}
-
-export function imgPosterSrc(
-  movie: TmdbMovie | TmdbTvShow,
-  size: 'w45' | 'w92' | 'w154' | 'w185' | 'w300' | 'w500' | 'original' = 'w500'
-) {
-  return `https://image.tmdb.org/t/p/${size}${movie.poster_path}`;
-}
-
 export async function fetchDiscoverMovies() {
   let data: TmdbMovie[] = [];
 

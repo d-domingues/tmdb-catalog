@@ -1,5 +1,5 @@
 export interface TmdbTvShow {
-  backdrop_path: null | string;
+  backdrop_path: string;
   first_air_date: string;
   genre_ids: number[];
   id: number;

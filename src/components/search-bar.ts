@@ -7,7 +7,6 @@ import { debounce, DebouncedFunc } from 'lodash-es';
 export class SearchBar extends LitElement {
   static styles = css`
     input#search-input {
-      width: 100%;
       box-sizing: border-box;
       border: 2px solid #333333;
       border-radius: 20px;
@@ -19,21 +18,44 @@ export class SearchBar extends LitElement {
       padding: 8px;
       outline: none;
       text-indent: 24px;
+      margin: 10px 0;
     }
 
-    input#search-input:focus {
-      border-bottom: none;
+    @media only screen and (min-width: 601px) {
+      input#search-input {
+        transition: 400ms ease-in-out;
+        width: 120px;
+        opacity: 0.4;
+      }
+
+      input#search-input:focus {
+        width: 400px;
+        opacity: 1;
+      }
+    }
+
+    @media only screen and (max-width: 600px) {
+      input#search-input {
+        width: 100%;
+      }
     }
   `;
 
-  @property() debounce = 300;
+  @property({ type: Number }) debounce = 300;
+  @property() value = '';
   @query('#search-input') searchInput!: HTMLInputElement;
   handleInput!: DebouncedFunc<(e: any) => Promise<void>>;
 
   firstUpdated() {
     this.handleInput = debounce(async e => {
       const detail = e.path[0].value;
-      const event = new CustomEvent('onQuery', { detail, bubbles: true, composed: true, cancelable: true });
+      const event = new CustomEvent('onQuery', {
+        detail,
+        bubbles: true,
+        composed: true,
+        cancelable: true,
+      });
+
       this.dispatchEvent(event);
 
       if (event.defaultPrevented) {
@@ -55,6 +77,7 @@ export class SearchBar extends LitElement {
       <input
         id="search-input"
         placeholder="Buscar..."
+        .value=${this.value}
         @input=${(e: any) => this.handleInput(e)}
         @keyup=${this.onSearch}
       />

@@ -1,57 +1,43 @@
 import '../components/carousel-component.js';
 import '../components/horizontal-display.js';
+import '../components/loading-spinner.js';
 import '../components/typeahead-input.js';
 
 import { css, html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
+import { until } from 'lit/directives/until.js';
 
-import { HomePageVM } from '../../models/home-page-vm.js';
 import { fechHomePageData } from '../tmdb.api.js';
 
 @customElement('home-page')
 export class HomePage extends LitElement {
   static styles = css`
     typeahead-input {
-      z-index: 1;
       position: absolute;
+      z-index: 1;
       top: 58px;
-      margin: 10px;
-      transition: 400ms ease-in-out;
-      width: 120px;
-      opacity: 0.4;
-    }
-
-    typeahead-input:focus-within {
-      width: 350px;
-      opacity: 1;
+      margin-left: 10px;
     }
 
     @media only screen and (max-width: 600px) {
       typeahead-input {
-        position: inherit;
+        position: initial;
         margin: 0;
       }
     }
   `;
 
-  @property({ attribute: false })
-  tmdb: HomePageVM = {
-    carousel: [],
-    recentMovies: [],
-    tvShows: [],
-  };
-
-  constructor() {
-    super();
-    fechHomePageData().then((data: HomePageVM) => (this.tmdb = data));
-  }
-
   render() {
-    return html`
-      <typeahead-input></typeahead-input>
-      <carousel-component .slides=${this.tmdb.carousel}></carousel-component>
-      <horizontal-display title="Novedades" .items=${this.tmdb.recentMovies}></horizontal-display>
-      <horizontal-display title="Series" .items=${this.tmdb.tvShows}></horizontal-display>
-    `;
+    return until(
+      fechHomePageData().then(
+        ({ carousel, recentMovies, tvShows }) => html`
+          <typeahead-input></typeahead-input>
+          <carousel-component .slides=${carousel}></carousel-component>
+          <horizontal-display title="Novedades" .items=${recentMovies}></horizontal-display>
+          <horizontal-display title="Series" .items=${tvShows}></horizontal-display>
+        `
+      ),
+      html`<loading-spinner></loading-spinner>`
+    );
   }
 }

@@ -5,7 +5,7 @@ import { customElement, property } from 'lit/decorators.js';
 
 import { isMovie, TmdbMovie } from '../../models/tmdb-movie.js';
 import { TmdbTvShow } from '../../models/tmdb-tv-show.js';
-import { imgPosterSrc } from '../tmdb.api';
+import { imgSrc } from '../directives/img-directive.js';
 
 @customElement('suggestion-option')
 export class SuggestionOption extends LitElement {
@@ -38,12 +38,8 @@ export class SuggestionOption extends LitElement {
   }
 
   render() {
-    if (!this.item) {
-      return '';
-    }
-
     return html`
-      <img class="movie-img" src=${imgPosterSrc(this.item, 'w45')} alt="" />
+      <img src="${imgSrc(this.item.poster_path, 'w45')} " alt="" />
       <span> ${isMovie(this.item) ? this.item.title : this.item.name} ${this.getDate()} </span>
       <star-rating rating=${this.item.vote_average}></star-rating>
     `;

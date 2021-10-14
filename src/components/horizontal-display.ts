@@ -14,24 +14,28 @@ export class HorizontalDisplay extends LitElement {
       grid-template-columns: repeat(5, 1fr);
       grid-gap: 20px 8px;
       align-items: end;
-      margin: 30px 0;
     }
 
     h5 {
       grid-column: span 5;
-      margin: 2% 0% 0.5%;
+      margin-bottom: -10px;
+    }
+
+    @media only screen and (max-width: 600px) {
+      :host {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      h5 {
+        grid-column: span 3;
+      }
     }
   `;
 
   @property() title: string = '';
-
-  @property() items!: (TmdbMovie | TmdbTvShow)[];
+  @property({ type: Array }) items!: (TmdbMovie | TmdbTvShow)[];
 
   render() {
-    if (!this.items) {
-      return html``;
-    }
-
     return html`
       <h5>${this.title}</h5>
       ${this.items.map(item => html`<movie-card .item=${item}></movie-card>`)}

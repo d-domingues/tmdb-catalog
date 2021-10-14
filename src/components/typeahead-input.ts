@@ -2,7 +2,7 @@ import './search-bar.js';
 import './suggestion-option.js';
 
 import { css, html, LitElement } from 'lit';
-import { customElement, query, state } from 'lit/decorators.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { repeat } from 'lit/directives/repeat.js';
 
@@ -38,6 +38,7 @@ export class TypeaheadInput extends LitElement {
     }
   `;
 
+  @property() value = '';
   @state() results: (TmdbMovie | TmdbTvShow)[] = [];
   @state() showSuggestions = false;
   @state() currentSuggIdx = 0;
@@ -59,7 +60,9 @@ export class TypeaheadInput extends LitElement {
 
     if (ev.key === 'ArrowUp') {
       this.currentSuggIdx =
-        this.currentSuggIdx === 0 ? this.results.length - 1 : (this.currentSuggIdx - 1) % this.results.length;
+        this.currentSuggIdx === 0
+          ? this.results.length - 1
+          : (this.currentSuggIdx - 1) % this.results.length;
     }
   }
 
@@ -67,18 +70,27 @@ export class TypeaheadInput extends LitElement {
     return html`
       <search-bar
         debounce="300"
+        value=${this.value}
         @focus=${() => (this.showSuggestions = true)}
         @blur=${() => (this.showSuggestions = false)}
         @onQuery=${this.handleInput}
         @keydown=${this.onNavigateOpts}
       ></search-bar>
 
-      <div id="suggestions" class=${classMap({ show: this.showSuggestions && this.results.length })}>
+      <div
+        id="suggestions"
+        class=${classMap({ show: this.showSuggestions && this.results.length })}
+      >
         ${repeat(
           this.results,
           item => item.id,
           (item, idx) =>
-            html`<suggestion-option selected=${idx === this.currentSuggIdx} .item=${item}></suggestion-option>`
+            html`
+              <suggestion-option
+                selected=${idx === this.currentSuggIdx}
+                .item=${item}
+              ></suggestion-option>
+            `
         )}
       </div>
     `;
