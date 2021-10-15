@@ -3,7 +3,7 @@ import { TmdbMovie } from '../models/tmdb-movie.js';
 import { TmdbTvShow } from '../models/tmdb-tv-show.js';
 
 export async function fetchDiscoverMovies() {
-  let data: TmdbMovie[] = [];
+  let dataset: TmdbMovie[] = [];
 
   const date = new Date();
   const today = date.toJSON();
@@ -22,16 +22,16 @@ export async function fetchDiscoverMovies() {
 
     const req = await fetch(`https://api.themoviedb.org/3/discover/movie?${params}`);
     const { results } = await req.json();
-    data = results;
+    dataset = results;
   } catch (error) {
     return [];
   }
 
-  return data;
+  return dataset;
 }
 
 export async function fetchDiscoverTvShows() {
-  let data: TmdbTvShow[] = [];
+  let dataset: TmdbTvShow[] = [];
 
   const date = new Date();
   const today = date.toJSON();
@@ -48,12 +48,12 @@ export async function fetchDiscoverTvShows() {
 
     const req = await fetch(`https://api.themoviedb.org/3/discover/tv?${params}`);
     const { results } = await req.json();
-    data = results;
+    dataset = results;
   } catch (error) {
     return [];
   }
 
-  return data;
+  return dataset;
 }
 
 export async function fechHomePageData(): Promise<HomePageVM> {
@@ -71,7 +71,7 @@ export async function fechHomePageData(): Promise<HomePageVM> {
 }
 
 export async function fetchSearchMovies(query: string, page = 1) {
-  let data: TmdbMovie[] = [];
+  let dataset: TmdbMovie[] = [];
 
   try {
     const params = new URLSearchParams({
@@ -84,16 +84,16 @@ export async function fetchSearchMovies(query: string, page = 1) {
 
     const req = await fetch(`https://api.themoviedb.org/3/search/movie?${params}`);
     const { results } = await req.json();
-    data = results;
+    dataset = results;
   } catch (error) {
     return [];
   }
 
-  return data;
+  return dataset;
 }
 
 export async function fetchSearchTv(query: string, page = 1) {
-  let data: TmdbMovie[] = [];
+  let dataset: TmdbMovie[] = [];
 
   try {
     const params = new URLSearchParams({
@@ -106,10 +106,29 @@ export async function fetchSearchTv(query: string, page = 1) {
 
     const req = await fetch(`https://api.themoviedb.org/3/search/tv?${params}`);
     const { results } = await req.json();
-    data = results;
+    dataset = results;
   } catch (error) {
     return [];
   }
 
-  return data;
+  return dataset;
+}
+
+export async function getMovie(movie_id: number, language = 'es-ES'): Promise<TmdbMovie> {
+  let object: TmdbMovie;
+
+  try {
+    const params = new URLSearchParams({
+      api_key: 'a7aed79b85b4769070e70428a435f4bb',
+      append_to_response: 'videos,images,credits',
+      language,
+    }).toString();
+
+    const req = await fetch(`https://api.themoviedb.org/3/movie/${movie_id}?${params}`);
+    object = await req.json();
+  } catch (error) {
+    return {} as TmdbMovie;
+  }
+
+  return object;
 }

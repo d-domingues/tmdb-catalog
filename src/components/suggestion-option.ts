@@ -1,11 +1,9 @@
-import './star-rating.js';
-
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-
 import { isMovie, TmdbMovie } from '../../models/tmdb-movie.js';
 import { TmdbTvShow } from '../../models/tmdb-tv-show.js';
 import { imgSrc } from '../directives/img-directive.js';
+import './star-rating.js';
 
 @customElement('suggestion-option')
 export class SuggestionOption extends LitElement {

@@ -1,11 +1,9 @@
-import './star-rating.js';
-
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-
 import { isMovie, TmdbMovie } from '../../models/tmdb-movie.js';
 import { TmdbTvShow } from '../../models/tmdb-tv-show.js';
 import { imgSrc } from '../directives/img-directive.js';
+import './star-rating.js';
 
 @customElement('movie-card')
 export class MovieCard extends LitElement {
@@ -16,13 +14,17 @@ export class MovieCard extends LitElement {
       flex-direction: column;
       justify-content: end;
 
-      --label-height: 40px;
+      --label-height: 45px;
       --rating-height: 26px;
     }
 
-    img {
+    a {
+      height: 100%;
+    }
+
+    a img {
       width: 100%;
-      height: calc(100% - var(--label-height) - var(--rating-height));
+      height: 100%;
       border-radius: 6px;
       background: black;
       box-shadow: rgb(0 0 0 / 40%) 0px 2px 4px, rgb(0 0 0 / 30%) 0px 7px 13px -3px,
@@ -69,7 +71,9 @@ export class MovieCard extends LitElement {
 
   render() {
     return html`
-      <img src=${imgSrc(this.item.poster_path, 'w300')} alt="" />
+      <a href="movie-details/${this.item.id}">
+        <img src=${imgSrc(this.item.poster_path, 'w300')} alt="" />
+      </a>
       <b class="label">
         ${(isMovie(this.item) ? this.item.title : this.item.name).substr(0, 40)} ${this.getDate()}
       </b>

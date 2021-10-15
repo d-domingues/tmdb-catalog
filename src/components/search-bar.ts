@@ -1,7 +1,13 @@
 import { Router } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
+import { repeat } from 'lit/directives/repeat.js';
 import { debounce, DebouncedFunc } from 'lodash-es';
+import { TmdbMovie } from '../../models/tmdb-movie.js';
+import { TmdbTvShow } from '../../models/tmdb-tv-show.js';
+import { fetchSearchMovies } from '../tmdb.api.js';
+import './suggestion-option.js';
 
 @customElement('search-bar')
 export class SearchBar extends LitElement {
@@ -39,34 +45,62 @@ export class SearchBar extends LitElement {
         width: 100%;
       }
     }
+
+    #suggestions {
+      position: absolute;
+      z-index: 20;
+      overflow: hidden;
+      width: calc(100% - 4px);
+      transition: 400ms ease-in-out;
+      max-height: 0;
+    }
+
+    #suggestions.show {
+      border: 2px solid #333333;
+      border-top: none;
+      max-height: 400px;
+    }
+
+    #suggestions suggestion-option[selected='true'] {
+      background: lightblue;
+    }
+
+    .star {
+      width: 20px;
+      height: 20px;
+    }
   `;
 
-  @property({ type: Number }) debounce = 300;
-  @property() value = '';
+  @property({ type: String }) value = '';
+  @state() results: (TmdbMovie | TmdbTvShow)[] = [];
+  @state() showSuggestions = false;
+  @state() currentSuggIdx = 0;
   @query('#search-input') searchInput!: HTMLInputElement;
-  handleInput!: DebouncedFunc<(e: any) => Promise<void>>;
+
+  private handleInput!: DebouncedFunc<(e: any) => Promise<void>>;
 
   firstUpdated() {
     this.handleInput = debounce(async e => {
-      const detail = e.path[0].value;
-      const event = new CustomEvent('onQuery', {
-        detail,
-        bubbles: true,
-        composed: true,
-        cancelable: true,
-      });
-
-      this.dispatchEvent(event);
-
-      if (event.defaultPrevented) {
-        e.preventDefault();
-      }
-    }, this.debounce);
+      const queryTxt = e.path[0]?.value?.trim();
+      this.results = queryTxt ? (await fetchSearchMovies(queryTxt)).splice(0, 12) : [];
+    }, 400);
   }
 
-  onSearch(ev: KeyboardEvent) {
-    const searchQuery = this.searchInput?.value?.trim();
+  onkeyPress(ev: KeyboardEvent) {
+    if (ev.key === 'ArrowDown') {
+      this.currentSuggIdx = (this.currentSuggIdx + 1) % this.results.length;
+      return;
+    }
 
+    if (ev.key === 'ArrowUp') {
+      this.currentSuggIdx =
+        this.currentSuggIdx === 0
+          ? this.results.length - 1
+          : (this.currentSuggIdx - 1) % this.results.length;
+      return;
+    }
+
+    const searchQuery = this.searchInput?.value?.trim();
     if (ev.key === 'Enter' && searchQuery) {
       Router.go(`search-view/${searchQuery}`);
     }
@@ -79,8 +113,29 @@ export class SearchBar extends LitElement {
         placeholder="Buscar..."
         .value=${this.value}
         @input=${(e: any) => this.handleInput(e)}
-        @keyup=${this.onSearch}
+        @focus=${() => (this.showSuggestions = true)}
+        @blur=${() => (this.showSuggestions = false)}
+        @keydown=${this.onkeyPress}
       />
+
+      <div
+        id="suggestions"
+        class=${classMap({ show: this.showSuggestions && this.results.length })}
+      >
+        ${repeat(
+          this.results,
+          item => item.id,
+          (item, idx) =>
+            html`
+              <a href="movie-details/${item.id}">
+                <suggestion-option
+                  selected=${idx === this.currentSuggIdx}
+                  .item=${item}
+                ></suggestion-option>
+              </a>
+            `
+        )}
+      </div>
     `;
   }
 }

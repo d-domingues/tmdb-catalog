@@ -1,5 +1,5 @@
 import '../components/horizontal-display.js';
-import '../components/typeahead-input.js';
+import '../components/search-bar.js';
 
 import { RouterLocation } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
@@ -64,7 +64,7 @@ export class SearchView extends LitElement {
       fetchData.then(
         items =>
           html`
-            <typeahead-input .value=${searchQuery}></typeahead-input>
+            <search-bar .value=${searchQuery}></search-bar>
             <horizontal-display
               title=${items.length
                 ? 'Resultados de la búsqueda'

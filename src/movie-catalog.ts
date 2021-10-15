@@ -1,11 +1,3 @@
-import './components/overlay-menu.js';
-import './views/home-page.js';
-import './views/movie-list.js';
-import './views/my-list.js';
-import './views/my-profile.js';
-import './views/search-view.js';
-import './views/tv-shows.js';
-
 import { css, html, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ref } from 'lit/directives/ref.js';

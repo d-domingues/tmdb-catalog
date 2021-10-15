@@ -1,4 +1,12 @@
 import { Router } from '@vaadin/router';
+import './components/overlay-menu.js';
+import './views/home-page.js';
+import './views/movie-details.js';
+import './views/movie-list.js';
+import './views/my-list.js';
+import './views/my-profile.js';
+import './views/search-view.js';
+import './views/tv-shows.js';
 
 let router: Promise<Node>;
 
@@ -12,6 +20,15 @@ export function setRouter(outlet: Element | undefined) {
     { path: '/movie-list', component: 'movie-list' },
     { path: '/my-list', component: 'my-list' },
     { path: '/my-profile', component: 'my-profile' },
+    { path: '/my-profile', component: 'my-profile' },
+    { path: '/movie-details/:id', component: 'movie-details' },
+    {
+      path: 'movie-details/:id',
+      action: async () => {
+        await import('./views/movie-details.js');
+      },
+      component: 'movie-details',
+    },
   ]);
 }
 

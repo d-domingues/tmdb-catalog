@@ -25,5 +25,7 @@ class ImgDirective extends Directive {
 
 export const imgDirective = directive(ImgDirective);
 
-export const imgSrc = (srcSuffix: string, size: BackdropSize | PosterSize = 'original') =>
-  (srcSuffix ? `https://image.tmdb.org/t/p/${size}${srcSuffix}` : nothing) as string;
+export const imgSrc = (srcSuffix: any, size: BackdropSize | PosterSize = 'original') =>
+  (typeof srcSuffix === 'string'
+    ? `https://image.tmdb.org/t/p/${size}${srcSuffix}`
+    : nothing) as string;
