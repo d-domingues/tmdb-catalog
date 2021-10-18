@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+import { TmdbTvShow } from './tmdb-tv-show.js';
 
 export interface TmdbMovie {
   adult: boolean;
@@ -15,4 +15,9 @@ export interface TmdbMovie {
   video: boolean;
   vote_average: number;
   vote_count: number;
+}
+
+// Type guard
+export function isMovie(pet: TmdbMovie | TmdbTvShow): pet is TmdbMovie {
+  return (pet as TmdbMovie).title !== undefined;
 }
