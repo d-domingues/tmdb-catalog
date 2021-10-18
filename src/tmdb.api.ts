@@ -64,7 +64,6 @@ export async function fechHomePageData(): Promise<HomePageVM> {
     tvShows: [],
   };
 
-  // TODO: validate the array empty on expetion
   const [movies, shows] = await Promise.all([fetchDiscoverMovies(), fetchDiscoverTvShows()]);
 
   data.carousel = [...movies.splice(0, 2), ...shows.splice(0, 2)];

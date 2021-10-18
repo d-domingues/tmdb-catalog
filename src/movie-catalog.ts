@@ -60,15 +60,10 @@ export class MovieCatalog extends LitElement {
 
   onOpenMenu() {
     this.show = true;
-    /*     const tag: any = document.createElement('overlay-menu');
-    tag.show = true;
-    this.shadowRoot?.appendChild(tag); */
   }
 
   onCloseMenu() {
     this.show = false;
-    /*     const tag: any = this.shadowRoot?.querySelector('overlay-menu');
-    this.shadowRoot?.removeChild(tag); */
   }
 
   menuIconTmpl() {
