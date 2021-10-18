@@ -1,4 +1,5 @@
 import { HomePageVM } from '../models/home-page-vm.js';
+import { TmdbDataObj } from '../models/tmdb-data-obj.js';
 import { TmdbMovie } from '../models/tmdb-movie.js';
 import { TmdbTvShow } from '../models/tmdb-tv-show.js';
 
@@ -57,17 +58,20 @@ export async function fetchDiscoverTvShows() {
 }
 
 export async function fechHomePageData(): Promise<HomePageVM> {
-  let carousel: (TmdbMovie | TmdbTvShow)[] = [];
-  let recentMovies: (TmdbMovie | TmdbTvShow)[] = [];
-  let tvShows: (TmdbMovie | TmdbTvShow)[] = [];
+  const data: HomePageVM = {
+    carousel: [],
+    recentMovies: [],
+    tvShows: [],
+  };
 
   // TODO: validate the array empty on expetion
   const [movies, shows] = await Promise.all([fetchDiscoverMovies(), fetchDiscoverTvShows()]);
-  carousel = [...movies.splice(0, 2), ...shows.splice(0, 2)];
-  recentMovies = movies.splice(0, 5);
-  tvShows = shows.splice(0, 5);
 
-  return { carousel, recentMovies, tvShows };
+  data.carousel = [...movies.splice(0, 2), ...shows.splice(0, 2)];
+  data.recentMovies = movies.splice(0, 5);
+  data.tvShows = shows.splice(0, 5);
+
+  return data;
 }
 
 export async function fetchSearchMovies(query: string, page = 1) {
@@ -114,17 +118,17 @@ export async function fetchSearchTv(query: string, page = 1) {
   return dataset;
 }
 
-export async function getMovie(movie_id: number, language = 'es-ES'): Promise<TmdbMovie> {
-  let object: TmdbMovie;
+export async function getDetails(type: string, movie_id: number, language = 'es-ES') {
+  let object: TmdbDataObj;
 
   try {
     const params = new URLSearchParams({
       api_key: 'a7aed79b85b4769070e70428a435f4bb',
-      append_to_response: 'videos,images,credits',
+      append_to_response: 'videos,images,credits,release_dates',
       language,
     }).toString();
 
-    const req = await fetch(`https://api.themoviedb.org/3/movie/${movie_id}?${params}`);
+    const req = await fetch(`https://api.themoviedb.org/3/${type}/${movie_id}?${params}`);
     object = await req.json();
   } catch (error) {
     return {} as TmdbMovie;

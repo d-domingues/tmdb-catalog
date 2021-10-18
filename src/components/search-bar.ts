@@ -1,78 +1,22 @@
+import './suggestion-option.js';
+
 import { Router } from '@vaadin/router';
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { debounce, DebouncedFunc } from 'lodash-es';
-import { TmdbMovie } from '../../models/tmdb-movie.js';
-import { TmdbTvShow } from '../../models/tmdb-tv-show.js';
+
+import { isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { fetchSearchMovies } from '../tmdb.api.js';
-import './suggestion-option.js';
+import { searchBarStyles } from './search-bar.styles.js';
 
 @customElement('search-bar')
 export class SearchBar extends LitElement {
-  static styles = css`
-    input#search-input {
-      box-sizing: border-box;
-      border: 2px solid #333333;
-      border-radius: 20px;
-      font-size: 14px;
-      background-image: url(assets/search-icon.svg);
-      background-position: 8px center;
-      background-repeat: no-repeat;
-      background-size: 14px;
-      padding: 8px;
-      outline: none;
-      text-indent: 24px;
-      margin: 10px 0;
-    }
-
-    @media only screen and (min-width: 601px) {
-      input#search-input {
-        transition: 400ms ease-in-out;
-        width: 120px;
-        opacity: 0.4;
-      }
-
-      input#search-input:focus {
-        width: 400px;
-        opacity: 1;
-      }
-    }
-
-    @media only screen and (max-width: 600px) {
-      input#search-input {
-        width: 100%;
-      }
-    }
-
-    #suggestions {
-      position: absolute;
-      z-index: 20;
-      overflow: hidden;
-      width: calc(100% - 4px);
-      transition: 400ms ease-in-out;
-      max-height: 0;
-    }
-
-    #suggestions.show {
-      border: 2px solid #333333;
-      border-top: none;
-      max-height: 400px;
-    }
-
-    #suggestions suggestion-option[selected='true'] {
-      background: lightblue;
-    }
-
-    .star {
-      width: 20px;
-      height: 20px;
-    }
-  `;
+  static styles = searchBarStyles;
 
   @property({ type: String }) value = '';
-  @state() results: (TmdbMovie | TmdbTvShow)[] = [];
+  @state() results: TmdbDataObj[] = [];
   @state() showSuggestions = false;
   @state() currentSuggIdx = 0;
   @query('#search-input') searchInput!: HTMLInputElement;
@@ -127,7 +71,7 @@ export class SearchBar extends LitElement {
           item => item.id,
           (item, idx) =>
             html`
-              <a href="movie-details/${item.id}">
+              <a href="details/${isMovie(item) ? 'movie' : 'tv'}/${item.id}">
                 <suggestion-option
                   selected=${idx === this.currentSuggIdx}
                   .item=${item}

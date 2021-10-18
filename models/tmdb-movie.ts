@@ -1,71 +1,13 @@
-import { TmdbTvShow } from './tmdb-tv-show.js';
-
-export enum Department {
-  Acting = 'Acting',
-  Art = 'Art',
-  Camera = 'Camera',
-  CostumeMakeUp = 'Costume & Make-Up',
-  Crew = 'Crew',
-  Directing = 'Directing',
-  Editing = 'Editing',
-  Lighting = 'Lighting',
-  Production = 'Production',
-  Sound = 'Sound',
-  Writing = 'Writing',
-}
-export interface Cast {
-  adult: boolean;
-  gender: number;
-  id: number;
-  known_for_department: Department;
-  name: string;
-  original_name: string;
-  popularity: number;
-  profile_path: string;
-  cast_id?: number;
-  character?: string;
-  credit_id: string;
-  order?: number;
-  department?: Department;
-  job?: string;
-}
-export interface Credits {
-  cast: Cast[];
-  crew: Cast[];
-}
-
-export interface Genre {
-  id: number;
-  name: string;
-}
-
-export interface Images {
-  backdrops: any[];
-  logos: any[];
-  posters: any[];
-}
-
-export interface ProductionCompany {
-  id: number;
-  logo_path: null | string;
-  name: string;
-  origin_country: string;
-}
-
-export interface ProductionCountry {
-  iso_3166_1: string;
-  name: string;
-}
-
-export interface SpokenLanguage {
-  english_name: string;
-  iso_639_1: string;
-  name: string;
-}
-
-export interface Videos {
-  results: any[];
-}
+import {
+  Credits,
+  Genre,
+  Images,
+  ProductionCompany,
+  ProductionCountry,
+  ReleaseDates,
+  SpokenLanguage,
+  Videos,
+} from './tmdb-data-obj.js';
 
 export interface TmdbMovie {
   adult: boolean;
@@ -96,9 +38,5 @@ export interface TmdbMovie {
   videos: Videos;
   images: Images;
   credits: Credits;
-}
-
-// Type guard
-export function isMovie(pet: TmdbMovie | TmdbTvShow): pet is TmdbMovie {
-  return (pet as TmdbMovie).title !== undefined;
+  release_dates: ReleaseDates;
 }

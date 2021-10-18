@@ -1,10 +1,12 @@
-import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import { until } from 'lit/directives/until.js';
 import '../components/carousel-component.js';
 import '../components/horizontal-display.js';
 import '../components/loading-spinner.js';
 import '../components/search-bar.js';
+
+import { css, html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import { until } from 'lit/directives/until.js';
+
 import { fechHomePageData } from '../tmdb.api.js';
 
 @customElement('home-page')

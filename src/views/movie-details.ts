@@ -1,94 +1,116 @@
+import '../components/cast-scroller.js';
 import '../components/loading-spinner.js';
 
 import { RouterLocation } from '@vaadin/router';
-import { css, html, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { html, LitElement } from 'lit';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 
-import { TmdbMovie } from '../../models/tmdb-movie.js';
+import { getDate, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
 import { getRouter } from '../router.js';
-import { getMovie } from '../tmdb.api.js';
+import { getDetails } from '../tmdb.api.js';
+import styles from './movie-details-styles.js';
 
 @customElement('movie-details')
 export class MovieDetails extends LitElement {
-  static styles = css`
-    .backdrop-img {
-      width: 100%;
-      box-shadow: rgb(0 0 0 / 40%) 0px 2px 4px, rgb(0 0 0 / 30%) 0px 7px 13px -3px,
-        rgb(0 0 0 / 20%) 0px -3px 0px inset;
-    }
-
-    .cast-carousel {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      grid-template-rows: repeat(3, auto);
-      grid-auto-flow: column;
-      gap: 4px 8px;
-      text-align: center;
-      align-items: center;
-    }
-
-    .cast-carousel img {
-      width: 90px;
-      height: 100px;
-      border-radius: 44%;
-      margin: auto;
-    }
-
-    .cast-carousel b {
-      font-size: 14px;
-    }
-
-    .cast-carousel span {
-      font-size: 14px;
-      color: gray;
-    }
-  `;
+  static styles = styles;
 
   @property({ type: Object }) location: RouterLocation = getRouter().location;
   @state() carouselPage = 0;
+  @query('#cast-scroller') castScroller!: HTMLDivElement;
 
-  director = (details: TmdbMovie) =>
+  director = (details: TmdbDataObj) =>
     details?.credits?.crew?.find(({ job }) => job === 'Director')?.name ?? '-';
 
-  productionCountries = (details: TmdbMovie) =>
+  productionCountries = (details: TmdbDataObj) =>
     details?.production_countries?.map(p => p.name).join(', ') ?? '-';
 
-  genres = (details: TmdbMovie) =>
-    details?.genres?.map(g => html` <span class="genre">${g.name}</span> `);
+  genres = (details: TmdbDataObj) =>
+    details?.genres?.map(g => html`<span class="genre">${g.name}</span>`);
 
-  carousel = (details: TmdbMovie) =>
-    details?.credits?.cast?.sort((a, b) => b.popularity - a.popularity).splice(0, 6) ?? [];
+  cast = (details: TmdbDataObj) =>
+    details?.credits?.cast?.sort((a, b) => b.popularity - a.popularity) ?? [];
+
+  moveScroller = (to: number) =>
+    this.castScroller.scrollBy({ left: this.castScroller.offsetWidth * to });
+
+  runtimeInHHMM = (details: TmdbDataObj) => {
+    const value =
+      isMovie(details) &&
+      !Number.isNaN(details.runtime) &&
+      `${Math.floor(details.runtime / 60)}:${(details.runtime % 60)
+        ?.toString()
+        ?.concat('0')
+        ?.substr(0, 2)
+        ?.trim()}`;
+
+    return value ? ` | ${value}` : '';
+  };
+
+  certification = (details: TmdbDataObj) => {
+    const value =
+      isMovie(details) &&
+      `${details?.release_dates?.results
+        ?.find(({ iso_3166_1 }) => iso_3166_1 === 'ES')
+        ?.release_dates?.at(0)
+        ?.certification?.trim()}`;
+
+    return value ? ` | ${value}` : '';
+  };
 
   render() {
-    const { id }: any = this.location?.params;
+    const { type, id }: any = this.location?.params;
 
     return until(
-      getMovie(id).then(
+      getDetails(type, id).then(
         details => html`
-          <img class="backdrop-img" src=${imgSrc(details.backdrop_path)} alt="" />
-          <!-- DIRECTOR -->
-          <h4>Director</h4>
-          <p>${this.director(details)}</p>
-          <!-- COUNTRY -->
-          <h4>País</h4>
-          <p>${this.productionCountries(details)}</p>
-          <!-- GENRES -->
-          ${this.genres(details)}
+          <div id="stack">
+            <img id="backdrop-img" src=${imgSrc(details.backdrop_path)} alt="" />
+            <!-- TITLE -->
+            <span id="title">
+              <b>${isMovie(details) ? details.title : details.name}</b>
+              <div>
+                ${getDate(details) + this.runtimeInHHMM(details) + this.certification(details)}
+              </div>
+            </span>
+            <!-- RATING -->
+            <span id="rating">
+              <div style="text-align: right">${details.vote_average}</div>
+              <star-rating size="16" rating=${details.vote_average}></star-rating>
+            </span>
+          </div>
+          <div id="details">
+            <!-- DIRECTOR -->
+            <div>
+              <h4>Director</h4>
+              ${this.director(details)}
+            </div>
+            <!-- COUNTRY -->
+            <div>
+              <h4>País</h4>
+              ${this.productionCountries(details)}
+            </div>
+            <!-- GENRES -->
+            ${this.genres(details)}
+          </div>
           <!-- OVERVIEW -->
           <h4>Sinopsis</h4>
-          <p>${details.overview}</p>
-          <!-- CAST CAROUSEL -->
+          <span id="overview">${details.overview}</span>
+          <!-- CAST -->
           <h4>Reparto</h4>
-          <div class="cast-carousel">
-            ${this.carousel(details).map(
-              ({ profile_path, name, character }) => html`
-                <img src=${imgSrc(profile_path, 'w92')} alt="" />
-                <b>${name}</b>
-                <span>${character}</span>
-              `
-            )}
+          <div style="display: flex">
+            <button @click=${() => this.moveScroller(-1)}>&#60;</button>
+            <div id="cast-scroller">
+              ${this.cast(details).map(
+                ({ profile_path, name, character }) => html`
+                  <img src=${imgSrc(profile_path, 'w92')} alt="" />
+                  <b>${name}</b>
+                  <span>${character}</span>
+                `
+              )}
+            </div>
+            <button @click=${() => this.moveScroller(1)}>&#62;</button>
           </div>
         `
       ),

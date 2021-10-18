@@ -1,4 +1,3 @@
-import '../components/horizontal-display.js';
 import '../components/search-bar.js';
 
 import { RouterLocation } from '@vaadin/router';
@@ -6,8 +5,7 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 
-import { TmdbMovie } from '../../models/tmdb-movie.js';
-import { TmdbTvShow } from '../../models/tmdb-tv-show.js';
+import { TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { getRouter } from '../router.js';
 import { fetchSearchMovies, fetchSearchTv } from '../tmdb.api.js';
 
@@ -47,7 +45,7 @@ export class SearchView extends LitElement {
     const { searchQuery }: any = this.location?.params;
 
     // this var gets updated everytime the state property 'page' changes performing a new request
-    const fetchData: Promise<(TmdbMovie | TmdbTvShow)[]> = searchQuery
+    const fetchData: Promise<TmdbDataObj[]> = searchQuery
       ? Promise.all([
           fetchSearchMovies(searchQuery, this.page),
           fetchSearchTv(searchQuery, this.page),
@@ -64,7 +62,7 @@ export class SearchView extends LitElement {
       fetchData.then(
         items =>
           html`
-            <search-bar .value=${searchQuery}></search-bar>
+            <search-bar .value=${searchQuery || ''}></search-bar>
             <horizontal-display
               title=${items.length
                 ? 'Resultados de la búsqueda'

@@ -1,3 +1,5 @@
+import './components/overlay-menu.js';
+
 import { css, html, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ref } from 'lit/directives/ref.js';
