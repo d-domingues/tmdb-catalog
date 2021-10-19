@@ -1,11 +1,45 @@
+import { AccountStates } from '../models/account-states.js';
 import { HomePageVM } from '../models/home-page-vm.js';
-import { TmdbDataObj } from '../models/tmdb-data-obj.js';
 import { TmdbMovie } from '../models/tmdb-movie.js';
-import { TmdbTvShow } from '../models/tmdb-tv-show.js';
+
+const api_key = Object.freeze('a7aed79b85b4769070e70428a435f4bb');
+const headers = Object.freeze({
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+});
+
+let session_id = '';
+
+(async () => {
+  const params = new URLSearchParams({ api_key }).toString();
+
+  const { request_token } = await fetch(
+    `https://api.themoviedb.org/3/authentication/token/new?${params}`
+  ).then(resp => resp.json());
+
+  await fetch(`https://api.themoviedb.org/3/authentication/token/validate_with_login?${params}`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      username: 'David_Lopes',
+      password: 'Th3M0v13DB',
+      request_token,
+    }),
+  });
+
+  const response = await fetch(
+    `https://api.themoviedb.org/3/authentication/session/new?${params}`,
+    {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ request_token }),
+    }
+  ).then(resp => resp.json());
+
+  session_id = response.session_id;
+})();
 
 export async function fetchDiscoverMovies() {
-  let dataset: TmdbMovie[] = [];
-
   const date = new Date();
   const today = date.toJSON();
   date.setMonth(date.getMonth() - 3);
@@ -13,7 +47,7 @@ export async function fetchDiscoverMovies() {
 
   try {
     const params = new URLSearchParams({
-      api_key: 'a7aed79b85b4769070e70428a435f4bb',
+      api_key,
       'release_date.gte': threeMontsAgo,
       'release_date.lte': today,
       sort_by: 'popularity.desc',
@@ -23,17 +57,13 @@ export async function fetchDiscoverMovies() {
 
     const req = await fetch(`https://api.themoviedb.org/3/discover/movie?${params}`);
     const { results } = await req.json();
-    dataset = results;
+    return results;
   } catch (error) {
     return [];
   }
-
-  return dataset;
 }
 
 export async function fetchDiscoverTvShows() {
-  let dataset: TmdbTvShow[] = [];
-
   const date = new Date();
   const today = date.toJSON();
   date.setMonth(date.getMonth() - 3);
@@ -41,7 +71,7 @@ export async function fetchDiscoverTvShows() {
 
   try {
     const params = new URLSearchParams({
-      api_key: 'a7aed79b85b4769070e70428a435f4bb',
+      api_key,
       'air_date.gte': threeMontsAgo,
       'air_date.lte': today,
       sort_by: 'popularity.desc',
@@ -49,37 +79,27 @@ export async function fetchDiscoverTvShows() {
 
     const req = await fetch(`https://api.themoviedb.org/3/discover/tv?${params}`);
     const { results } = await req.json();
-    dataset = results;
+    return results;
   } catch (error) {
     return [];
   }
-
-  return dataset;
 }
 
 export async function fechHomePageData(): Promise<HomePageVM> {
-  const data: HomePageVM = {
-    carousel: [],
-    recentMovies: [],
-    tvShows: [],
-  };
-
   const [movies, shows] = await Promise.all([fetchDiscoverMovies(), fetchDiscoverTvShows()]);
 
-  data.carousel = [...movies.splice(0, 2), ...shows.splice(0, 2)];
-  data.recentMovies = movies.splice(0, 5);
-  data.tvShows = shows.splice(0, 5);
-
-  return data;
+  return {
+    carousel: [...movies.splice(0, 2), ...shows.splice(0, 2)],
+    recentMovies: movies.splice(0, 5),
+    tvShows: shows.splice(0, 5),
+  };
 }
 
 export async function fetchSearchMovies(query: string, page = 1) {
-  let dataset: TmdbMovie[] = [];
-
   try {
     const params = new URLSearchParams({
       query,
-      api_key: 'a7aed79b85b4769070e70428a435f4bb',
+      api_key,
       include_adult: 'false',
       sort_by: 'popularity.desc',
       page: `${page}`,
@@ -87,21 +107,17 @@ export async function fetchSearchMovies(query: string, page = 1) {
 
     const req = await fetch(`https://api.themoviedb.org/3/search/movie?${params}`);
     const { results } = await req.json();
-    dataset = results;
+    return results;
   } catch (error) {
     return [];
   }
-
-  return dataset;
 }
 
 export async function fetchSearchTv(query: string, page = 1) {
-  let dataset: TmdbMovie[] = [];
-
   try {
     const params = new URLSearchParams({
       query,
-      api_key: 'a7aed79b85b4769070e70428a435f4bb',
+      api_key,
       include_adult: 'false',
       sort_by: 'popularity.desc',
       page: `${page}`,
@@ -109,29 +125,48 @@ export async function fetchSearchTv(query: string, page = 1) {
 
     const req = await fetch(`https://api.themoviedb.org/3/search/tv?${params}`);
     const { results } = await req.json();
-    dataset = results;
+    return results;
   } catch (error) {
     return [];
   }
-
-  return dataset;
 }
 
-export async function getDetails(type: string, movie_id: number, language = 'es-ES') {
-  let object: TmdbDataObj;
-
+export async function getDetails(type: 'movie' | 'tv', movie_id: number, language = 'es-ES') {
   try {
     const params = new URLSearchParams({
-      api_key: 'a7aed79b85b4769070e70428a435f4bb',
-      append_to_response: 'videos,images,credits,release_dates',
+      api_key,
+      append_to_response: 'credits,release_dates,', // 'videos,images,',
       language,
     }).toString();
 
     const req = await fetch(`https://api.themoviedb.org/3/${type}/${movie_id}?${params}`);
-    object = await req.json();
+    return req.json();
   } catch (error) {
     return {} as TmdbMovie;
   }
+}
 
-  return object;
+export async function markAsFavorite(
+  media_type: 'movie' | 'tv',
+  media_id: number,
+  favorite: boolean
+) {
+  const params = new URLSearchParams({ session_id, api_key }).toString();
+
+  return fetch(`https://api.themoviedb.org/3/account/{account_id}/favorite?${params}`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ media_type, media_id, favorite }),
+  }).then(resp => resp.json());
+}
+
+export async function getAccountStates(
+  media_type: 'movie' | 'tv',
+  media_id: number
+): Promise<AccountStates> {
+  const params = new URLSearchParams({ session_id, api_key }).toString();
+
+  return fetch(
+    `https://api.themoviedb.org/3/${media_type}/${media_id}/account_states?${params}`
+  ).then(resp => resp.json());
 }

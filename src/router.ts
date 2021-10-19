@@ -45,9 +45,9 @@ export function setRouter(outlet: Element | undefined) {
     },
     {
       path: '/details/:type/:id',
-      component: 'movie-details',
+      component: 'media-details',
       action: async () => {
-        await import('./views/movie-details.js');
+        await import('./views/media-details.js');
       },
     },
   ]);

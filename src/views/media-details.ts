@@ -1,23 +1,23 @@
 import '../components/cast-scroller.js';
 import '../components/loading-spinner.js';
+import '../components/mark-favorite.js';
 
 import { RouterLocation } from '@vaadin/router';
 import { html, LitElement } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { customElement, property, query } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 
 import { getDate, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
 import { getRouter } from '../router.js';
-import { getDetails } from '../tmdb.api.js';
-import styles from './movie-details-styles.js';
+import { getAccountStates, getDetails } from '../tmdb.api.js';
+import styles from './media-details-styles.js';
 
-@customElement('movie-details')
-export class MovieDetails extends LitElement {
+@customElement('media-details')
+export class MediaDetails extends LitElement {
   static styles = styles;
 
   @property({ type: Object }) location: RouterLocation = getRouter().location;
-  @state() carouselPage = 0;
   @query('#cast-scroller') castScroller!: HTMLDivElement;
 
   director = (details: TmdbDataObj) =>
@@ -63,8 +63,8 @@ export class MovieDetails extends LitElement {
     const { type, id }: any = this.location?.params;
 
     return until(
-      getDetails(type, id).then(
-        details => html`
+      Promise.all([getDetails(type, id), getAccountStates(type, id)]).then(
+        ([details, { favorite }]) => html`
           <div id="stack">
             <img id="backdrop-img" src=${imgSrc(details.backdrop_path)} alt="" />
             <!-- TITLE -->
@@ -93,6 +93,8 @@ export class MovieDetails extends LitElement {
             </div>
             <!-- GENRES -->
             ${this.genres(details)}
+            <!-- MARK FAVORITE BTN -->
+            <mark-favorite mediaId=${id} mediaType=${type} ?favorite=${favorite}></mark-favorite>
           </div>
           <!-- OVERVIEW -->
           <h4>Sinopsis</h4>
