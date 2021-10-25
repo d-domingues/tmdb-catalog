@@ -3,8 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { isMovie, TmdbMovie } from '../../models/tmdb-movie.js';
-import { TmdbTvShow } from '../../models/tmdb-tv-show.js';
+import { isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
 
 @customElement('carousel-component')
@@ -32,6 +31,7 @@ export class CarouselComponent extends LitElement {
     }
 
     .title {
+      text-decoration: none;
       position: absolute;
       top: 10px;
       padding: 10px;
@@ -66,7 +66,7 @@ export class CarouselComponent extends LitElement {
     }
   `;
 
-  @property({ type: Array }) slides: (TmdbMovie | TmdbTvShow)[] = [];
+  @property({ type: Array }) slides: TmdbDataObj[] = [];
 
   @state() slideIdx = 0;
 
@@ -92,12 +92,14 @@ export class CarouselComponent extends LitElement {
     }, 5000);
   }
 
-  slideTmpl(item: TmdbMovie | TmdbTvShow, idx: number) {
+  slideTmpl(item: TmdbDataObj, idx: number) {
     const slyles = { position: 'relative', display: this.slideIdx === idx ? 'block' : 'none' };
 
     return html`
       <div active=${this.slideIdx === idx} style=${styleMap(slyles)}>
-        <span class="title">${isMovie(item) ? item.title : item.name}</span>
+        <a class="title" href="details/${isMovie(item) ? 'movie' : 'tv'}/${item.id}">
+          ${isMovie(item) ? item.title : item.name}
+        </a>
         <img class="backdrop-img" src="${imgSrc(item.backdrop_path)} " alt="" />
       </div>
     `;
@@ -107,7 +109,6 @@ export class CarouselComponent extends LitElement {
     return html`
       <div id="slideshow-container">
         ${this.slides.map((s, idx) => this.slideTmpl(s, idx))}
-
         <div class="slide-btns">
           ${this.slides.map(
             (_, idx) =>

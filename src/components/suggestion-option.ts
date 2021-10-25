@@ -3,8 +3,7 @@ import './star-rating.js';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { isMovie, TmdbMovie } from '../../models/tmdb-movie.js';
-import { TmdbTvShow } from '../../models/tmdb-tv-show.js';
+import { isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
 
 @customElement('suggestion-option')
@@ -30,7 +29,7 @@ export class SuggestionOption extends LitElement {
     }
   `;
 
-  @property() item!: TmdbMovie | TmdbTvShow;
+  @property() item!: TmdbDataObj;
 
   getDate() {
     const strDate = isMovie(this.item) ? this.item.release_date : this.item.first_air_date;

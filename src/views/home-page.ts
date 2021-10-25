@@ -1,7 +1,7 @@
 import '../components/carousel-component.js';
 import '../components/horizontal-display.js';
 import '../components/loading-spinner.js';
-import '../components/typeahead-input.js';
+import '../components/search-bar.js';
 
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
@@ -12,7 +12,7 @@ import { fechHomePageData } from '../tmdb.api.js';
 @customElement('home-page')
 export class HomePage extends LitElement {
   static styles = css`
-    typeahead-input {
+    search-bar {
       position: absolute;
       z-index: 1;
       top: 58px;
@@ -20,7 +20,7 @@ export class HomePage extends LitElement {
     }
 
     @media only screen and (max-width: 600px) {
-      typeahead-input {
+      search-bar {
         position: initial;
         margin: 0;
       }
@@ -31,7 +31,7 @@ export class HomePage extends LitElement {
     return until(
       fechHomePageData().then(
         ({ carousel, recentMovies, tvShows }) => html`
-          <typeahead-input></typeahead-input>
+          <search-bar></search-bar>
           <carousel-component .slides=${carousel}></carousel-component>
           <horizontal-display title="Novedades" .items=${recentMovies}></horizontal-display>
           <horizontal-display title="Series" .items=${tvShows}></horizontal-display>

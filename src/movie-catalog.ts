@@ -1,10 +1,4 @@
 import './components/overlay-menu.js';
-import './views/home-page.js';
-import './views/movie-list.js';
-import './views/my-list.js';
-import './views/my-profile.js';
-import './views/search-view.js';
-import './views/tv-shows.js';
 
 import { css, html, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -66,15 +60,10 @@ export class MovieCatalog extends LitElement {
 
   onOpenMenu() {
     this.show = true;
-    /*     const tag: any = document.createElement('overlay-menu');
-    tag.show = true;
-    this.shadowRoot?.appendChild(tag); */
   }
 
   onCloseMenu() {
     this.show = false;
-    /*     const tag: any = this.shadowRoot?.querySelector('overlay-menu');
-    this.shadowRoot?.removeChild(tag); */
   }
 
   menuIconTmpl() {

@@ -1,8 +1,7 @@
-import { TmdbMovie } from './tmdb-movie.js';
-import { TmdbTvShow } from './tmdb-tv-show.js';
+import { TmdbDataObj } from './tmdb-data-obj.js';
 
 export interface HomePageVM {
-  carousel: (TmdbMovie | TmdbTvShow)[];
-  recentMovies: (TmdbMovie | TmdbTvShow)[];
-  tvShows: (TmdbMovie | TmdbTvShow)[];
+  carousel: TmdbDataObj[];
+  recentMovies: TmdbDataObj[];
+  tvShows: TmdbDataObj[];
 }
