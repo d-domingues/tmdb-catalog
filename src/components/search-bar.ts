@@ -8,7 +8,7 @@ import { repeat } from 'lit/directives/repeat.js';
 import { debounce, DebouncedFunc } from 'lodash-es';
 
 import { isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
-import { fetchSearchMovies } from '../tmdb.api.js';
+import { fetchSearchMulti } from '../tmdb.api.js';
 import { searchBarStyles } from './search-bar.styles.js';
 
 @customElement('search-bar')
@@ -26,7 +26,7 @@ export class SearchBar extends LitElement {
   firstUpdated() {
     this.handleInput = debounce(async e => {
       const queryTxt = e.path[0]?.value?.trim();
-      this.results = queryTxt ? (await fetchSearchMovies(queryTxt)).splice(0, 12) : [];
+      this.results = queryTxt ? (await fetchSearchMulti(queryTxt)).splice(0, 12) : [];
     }, 400);
   }
 
@@ -59,7 +59,7 @@ export class SearchBar extends LitElement {
         @input=${(e: any) => this.handleInput(e)}
         @focus=${() => (this.showSuggestions = true)}
         @blur=${() => (this.showSuggestions = false)}
-        @keydown=${this.onkeyPress}
+        @keyup=${this.onkeyPress}
       />
 
       <div

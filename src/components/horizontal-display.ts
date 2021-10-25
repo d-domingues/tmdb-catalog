@@ -1,7 +1,7 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { getDate, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
+import { getYear, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
 import { horizontalDisplaySyles } from './styles.js';
 
@@ -22,7 +22,7 @@ export class HorizontalDisplay extends LitElement {
               <img src=${imgSrc(item.poster_path, 'w185')} alt="" />
             </a>
             <b class="label">
-              ${(isMovie(item) ? item.title : item.name).substr(0, 40)} (${getDate(item)})
+              ${(isMovie(item) ? item.title : item.name).substr(0, 40)} (${getYear(item)})
             </b>
             <span class="rating">
               ${item.vote_average}

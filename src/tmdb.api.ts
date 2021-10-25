@@ -131,6 +131,22 @@ export async function fetchSearchTv(query: string, page = 1) {
   }
 }
 
+export async function fetchSearchMulti(query: string) {
+  try {
+    const params = new URLSearchParams({
+      query,
+      api_key,
+      indexes: 'movies.en,tv_series.en',
+    }).toString();
+
+    const req = await fetch(`https://api.themoviedb.org/3/search/multi?${params}`);
+    const { results } = await req.json();
+    return results;
+  } catch (error) {
+    return [];
+  }
+}
+
 export async function getDetails(type: 'movie' | 'tv', movie_id: number, language = 'es-ES') {
   try {
     const params = new URLSearchParams({

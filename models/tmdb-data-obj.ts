@@ -7,7 +7,7 @@ export type TmdbDataObj = TmdbMovie | TmdbTvShow;
 export const isMovie = (pet: TmdbDataObj): pet is TmdbMovie =>
   (pet as TmdbMovie).title !== undefined;
 
-export const getDate = (item: TmdbDataObj) =>
+export const getYear = (item: TmdbDataObj) =>
   (isMovie(item) ? item?.release_date : item?.first_air_date)?.split('-')?.at(0) ?? '';
 
 export enum Department {

@@ -7,11 +7,11 @@ import { html, LitElement } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 
-import { getDate, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
+import { getYear, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
 import { getRouter } from '../router.js';
 import { getAccountStates, getDetails } from '../tmdb.api.js';
-import styles from './media-details-styles.js';
+import styles from './media-details.styles.js';
 
 @customElement('media-details')
 export class MediaDetails extends LitElement {
@@ -59,6 +59,14 @@ export class MediaDetails extends LitElement {
     return value ? ` | ${value}` : '';
   };
 
+  share(details: TmdbDataObj) {
+    navigator.share({
+      title: 'Movie Catalog',
+      text: `Details for ${isMovie(details) ? details.title : details.name}`,
+      url: this.location.getUrl(),
+    });
+  }
+
   render() {
     const { type, id }: any = this.location?.params;
 
@@ -71,7 +79,7 @@ export class MediaDetails extends LitElement {
             <span id="title">
               <b>${isMovie(details) ? details.title : details.name}</b>
               <div>
-                ${getDate(details) + this.runtimeInHHMM(details) + this.certification(details)}
+                ${getYear(details) + this.runtimeInHHMM(details) + this.certification(details)}
               </div>
             </span>
             <!-- RATING -->
@@ -95,6 +103,13 @@ export class MediaDetails extends LitElement {
             ${this.genres(details)}
             <!-- MARK FAVORITE BTN -->
             <mark-favorite mediaId=${id} mediaType=${type} ?favorite=${favorite}></mark-favorite>
+            <img
+              height="25"
+              src="assets/share.svg"
+              alt="SHARE"
+              @click=${this.share}
+              @keyup=${this.share}
+            />
           </div>
           <!-- OVERVIEW -->
           <h4>Sinopsis</h4>

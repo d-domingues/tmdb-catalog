@@ -1,5 +1,4 @@
 // import { playwrightLauncher } from '@web/test-runner-playwright';
-
 import { importMapsPlugin } from '@web/dev-server-import-maps';
 
 const filteredLogs = ['Running in dev mode', 'lit-html is in dev mode'];

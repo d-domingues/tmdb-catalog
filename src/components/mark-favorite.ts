@@ -27,7 +27,7 @@ export class MarkFavorite extends LitElement {
         src="assets/${this.favorite ? 'red' : 'shade'}-heart.svg"
         alt=""
         @click=${this.onClick}
-        @keypress=${this.onClick}
+        @keyup=${this.onClick}
       />
     `;
   }

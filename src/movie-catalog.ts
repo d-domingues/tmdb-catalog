@@ -74,7 +74,7 @@ export class MovieCatalog extends LitElement {
             src="assets/menu-icon.svg"
             alt="MENU"
             @click=${this.onOpenMenu}
-            @keydown=${this.onOpenMenu}
+            @keyup=${this.onOpenMenu}
           />
         `;
   }
