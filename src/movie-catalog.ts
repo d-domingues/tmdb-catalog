@@ -19,15 +19,14 @@ export class MovieCatalog extends LitElement {
       position: fixed;
       z-index: 9;
       height: 50px;
-      width: 100vw;
+      width: 100%;
       top: 0px;
     }
 
     header img {
       cursor: pointer;
       float: right;
-      padding: 4px;
-      margin: 5px 18px;
+      padding: 10px;
     }
 
     header img:hover {
