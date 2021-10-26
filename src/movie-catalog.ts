@@ -1,59 +1,15 @@
 import './components/overlay-menu.js';
 
-import { css, html, LitElement, nothing } from 'lit';
+import { html, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ref } from 'lit/directives/ref.js';
 
+import { movieCatalogStyles } from './movie-catalog.styles.js';
 import { setRouter } from './router.js';
 
 @customElement('movie-catalog')
 export class MovieCatalog extends LitElement {
-  static styles = css`
-    :host {
-      font-size: calc(10px + 2vmin);
-      color: #1a2b42;
-    }
-
-    header {
-      background-color: #333333;
-      position: fixed;
-      z-index: 9;
-      height: 50px;
-      width: 100%;
-      top: 0px;
-    }
-
-    header img {
-      cursor: pointer;
-      float: right;
-      padding: 10px;
-    }
-
-    header img:hover {
-      background-color: #adaaff80;
-    }
-
-    main {
-      max-width: 1000px;
-      margin: 50px auto 40px;
-    }
-
-    footer {
-      font-size: calc(12px + 0.5vmin);
-      text-align: center;
-      background: #333333;
-      color: white;
-      height: 100px;
-      padding-top: 20px;
-    }
-
-    /* Responsive for mobile devices */
-    @media only screen and (max-width: 600px) {
-      main {
-        margin: 58px 8px 28px;
-      }
-    }
-  `;
+  static styles = movieCatalogStyles;
 
   @property({ type: Boolean }) show = false;
 

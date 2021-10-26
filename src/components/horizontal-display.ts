@@ -21,9 +21,7 @@ export class HorizontalDisplay extends LitElement {
             <a href="details/${isMovie(item) ? 'movie/' : 'tv/'}${item.id}">
               <img src=${imgSrc(item.poster_path, 'w185')} alt="" />
             </a>
-            <b class="label">
-              ${(isMovie(item) ? item.title : item.name).substr(0, 40)} (${getYear(item)})
-            </b>
+            <b class="label"> ${isMovie(item) ? item.title : item.name} (${getYear(item)}) </b>
             <span class="rating">
               ${item.vote_average}
               <star-rating size="16" rating=${item.vote_average}></star-rating>

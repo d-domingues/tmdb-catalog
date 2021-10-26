@@ -1,4 +1,4 @@
-import { html, LitElement } from 'lit';
+import { html, LitElement, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
@@ -39,11 +39,13 @@ export class CarouselComponent extends LitElement {
   titleTmpl = () => {
     const item = this.slides[this.slideIdx];
 
-    return html`
-      <a class="title" href="details/${isMovie(item) ? 'movie' : 'tv'}/${item.id}">
-        ${isMovie(item) ? item.title : item.name}
-      </a>
-    `;
+    return item
+      ? html`
+          <a class="title" href="details/${isMovie(item) ? 'movie' : 'tv'}/${item.id}">
+            ${isMovie(item) ? item.title : item.name}
+          </a>
+        `
+      : nothing;
   };
 
   render() {

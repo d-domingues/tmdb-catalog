@@ -1,6 +1,7 @@
 import { AccountStates } from '../models/account-states.js';
 import { HomePageVM } from '../models/home-page-vm.js';
 import { TmdbMovie } from '../models/tmdb-movie.js';
+import { TmdbTvShow } from '../models/tmdb-tv-show.js';
 
 const api_key = Object.freeze('a7aed79b85b4769070e70428a435f4bb');
 const headers = Object.freeze({
@@ -185,4 +186,17 @@ export async function getAccountStates(
   return fetch(
     `https://api.themoviedb.org/3/${media_type}/${media_id}/account_states?${params}`
   ).then(resp => resp.json());
+}
+
+export async function getFavorites(page = 1): Promise<{ movie: TmdbMovie[]; tv: TmdbTvShow[] }> {
+  const params = new URLSearchParams({ session_id, page: `${page}`, api_key }).toString();
+
+  return Promise.all([
+    fetch(`https://api.themoviedb.org/3/account/David_Lopes/favorite/movies?${params}`).then(resp =>
+      resp.json()
+    ),
+    fetch(`https://api.themoviedb.org/3/account/David_Lopes/favorite/tv?${params}`).then(resp =>
+      resp.json()
+    ),
+  ]).then(([movie, tv]) => ({ movie: movie.results, tv: tv.results }));
 }

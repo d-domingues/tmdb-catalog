@@ -27,7 +27,7 @@ export default /** @type {import("@web/test-runner").TestRunnerConfig} */ ({
       inject: {
         importMap: {
           imports: {
-            '/src/tmdb.api.ts': '/mocks/tmdb.api.ts',
+            '/out-tsc/src/tmdb.api.js': '/out-tsc/mocks/tmdb.api.js',
           },
         },
       },

@@ -1,11 +1,14 @@
+import { Router } from '@vaadin/router';
 import './views/home-page.js';
 
-import { Router } from '@vaadin/router';
+let router: Node;
 
-let router: Promise<Node>;
+export async function setRouter(outlet: Element | undefined) {
+  if (!outlet) {
+    return;
+  }
 
-export function setRouter(outlet: Element | undefined) {
-  router = new Router(outlet).setRoutes([
+  router = await new Router(outlet).setRoutes([
     { path: '/', redirect: '/home-page' },
     { path: '/home-page', component: 'home-page' },
     {

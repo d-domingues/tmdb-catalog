@@ -5,28 +5,35 @@ import '../src/components/horizontal-display.js';
 import { HorizontalDisplay } from '../src/components/horizontal-display.js';
 
 describe('HorizontalDisplay', () => {
+  const stub: TmdbMovie[] = [
+    { poster_path: '/A' },
+    { poster_path: '/B' },
+    { poster_path: '/C' },
+  ] as TmdbMovie[];
   let element: HorizontalDisplay;
 
   beforeEach(async () => {
-    const stub: TmdbMovie[] = [{ poster_path: 'A' }, { poster_path: 'B' }, { poster_path: 'C' }] as TmdbMovie[];
-
-    element = await fixture(html`<horizontal-display .items=${stub}></horizontal-display>`);
+    element = await fixture(
+      html`<horizontal-display title="Test Title" Tilte .items=${stub}></horizontal-display>`
+    );
   });
 
   it('renders a title', () => {
-    const h4 = element.shadowRoot!.querySelector('h4')!;
-    expect(h4).to.exist;
-    expect(h4.textContent).to.equal('Novedades');
+    const h5 = element.shadowRoot!.querySelector('h5');
+    expect(h5).to.exist;
+    expect(h5!.textContent).to.equal('Test Title');
   });
 
   it('renders the movie items', () => {
-    const movies = element.shadowRoot!.querySelectorAll('.item');
+    const movies = element.shadowRoot!.querySelectorAll('.movie-card');
     expect(movies).to.be.an.instanceof(NodeList).that.have.length(3);
   });
 
   it('produces correct image scr property', () => {
-    const movies = element.shadowRoot!.querySelectorAll('.item');
-
-    expect(movies[2]).to.have.property('src', 'https://image.tmdb.org/t/p/w500/C');
+    const movies = element.shadowRoot!.querySelectorAll('.movie-card');
+    expect(movies[2].querySelector('img')).to.have.property(
+      'src',
+      'https://image.tmdb.org/t/p/w185/C'
+    );
   });
 });
