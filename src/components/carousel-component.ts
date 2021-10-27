@@ -1,73 +1,16 @@
-import { css, html, LitElement } from 'lit';
+import { html, LitElement, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { styleMap } from 'lit/directives/style-map.js';
 
 import { isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
+import styles from './carousel-component.styles.js';
 
 @customElement('carousel-component')
 export class CarouselComponent extends LitElement {
-  static styles = css`
-    #slideshow-container {
-      position: relative;
-      padding-top: 8px;
-    }
-
-    .backdrop-img {
-      width: 100%;
-      box-shadow: rgb(0 0 0 / 40%) 0px 2px 4px, rgb(0 0 0 / 30%) 0px 7px 13px -3px,
-        rgb(0 0 0 / 20%) 0px -3px 0px inset;
-    }
-
-    .title,
-    .slide-btns {
-      color: #f2f2f2;
-      font-size: 15px;
-      padding: 8px 12px;
-      position: absolute;
-      width: 100%;
-      text-align: center;
-    }
-
-    .title {
-      text-decoration: none;
-      position: absolute;
-      top: 10px;
-      padding: 10px;
-      color: white;
-      font-size: 16px;
-      border-radius: 10px 0px 0px 10px;
-      user-select: none;
-      background-color: rgba(0, 0, 0, 0.4);
-      right: 0px;
-      width: auto;
-    }
-
-    .slide-btns {
-      bottom: 8px;
-      width: fit-content;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .slide-btns button {
-      cursor: pointer;
-      height: 4px;
-      width: 40px;
-      margin: 2px;
-      border-radius: 4px;
-      border: none;
-    }
-
-    .slide-btns button.active {
-      background-color: #717171;
-    }
-  `;
+  static styles = styles;
 
   @property({ type: Array }) slides: TmdbDataObj[] = [];
-
   @state() slideIdx = 0;
 
   private intervalId!: NodeJS.Timeout;
@@ -87,39 +30,44 @@ export class CarouselComponent extends LitElement {
 
     this.slideIdx = val;
 
-    this.intervalId = setInterval(() => {
-      this.slideIdx = (this.slideIdx + 1) % this.slides.length;
-    }, 5000);
+    this.intervalId = setInterval(
+      () => (this.slideIdx = (this.slideIdx + 1) % this.slides.length),
+      5000
+    );
   }
 
-  slideTmpl(item: TmdbDataObj, idx: number) {
-    const slyles = { position: 'relative', display: this.slideIdx === idx ? 'block' : 'none' };
+  titleTmpl = () => {
+    const item = this.slides[this.slideIdx];
 
-    return html`
-      <div active=${this.slideIdx === idx} style=${styleMap(slyles)}>
-        <a class="title" href="details/${isMovie(item) ? 'movie' : 'tv'}/${item.id}">
-          ${isMovie(item) ? item.title : item.name}
-        </a>
-        <img class="backdrop-img" src="${imgSrc(item.backdrop_path)} " alt="" />
-      </div>
-    `;
-  }
+    return item
+      ? html`
+          <a class="title" href="details/${isMovie(item) ? 'movie' : 'tv'}/${item.id}">
+            ${isMovie(item) ? item.title : item.name}
+          </a>
+        `
+      : nothing;
+  };
 
   render() {
     return html`
-      <div id="slideshow-container">
-        ${this.slides.map((s, idx) => this.slideTmpl(s, idx))}
-        <div class="slide-btns">
-          ${this.slides.map(
-            (_, idx) =>
-              html`
-                <button
-                  class=${classMap({ active: idx === this.slideIdx })}
-                  @click=${() => this.restartInterval(idx)}
-                ></button>
-              `
-          )}
-        </div>
+      ${this.slides.map(
+        (item, idx) =>
+          html`<img
+            style="--slide: ${this.slideIdx}; grid-area: slide${idx}"
+            src=${imgSrc(item.backdrop_path)}
+            alt=""
+          />`
+      )}
+      ${this.titleTmpl()}
+      <div class="slide-btns">
+        ${this.slides.map(
+          (_, idx) => html`
+            <button
+              class=${classMap({ active: idx === this.slideIdx })}
+              @click=${() => this.restartInterval(idx)}
+            ></button>
+          `
+        )}
       </div>
     `;
   }

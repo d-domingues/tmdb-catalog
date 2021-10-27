@@ -38,7 +38,7 @@ export class SuggestionOption extends LitElement {
 
   render() {
     return html`
-      <img src="${imgSrc(this.item.poster_path, 'w45')} " alt="" />
+      <img src=${imgSrc(this.item.poster_path, 'w45')} alt="" />
       <span> ${isMovie(this.item) ? this.item.title : this.item.name} ${this.getDate()} </span>
       <star-rating rating=${this.item.vote_average}></star-rating>
     `;

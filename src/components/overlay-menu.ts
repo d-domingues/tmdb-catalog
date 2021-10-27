@@ -95,7 +95,7 @@ export class OverlayMenu extends LitElement {
       </nav>
 
       <div id="overlay" class=${classMap({ active: this.show })}>
-        <span id="close-btn" @click=${this.onClose} @keydown=${this.onClose}> &times; </span>
+        <span id="close-btn" @click=${this.onClose} @keyup=${this.onClose}> &times; </span>
       </div>
     `;
   }

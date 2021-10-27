@@ -1,3 +1,4 @@
+import { HomePageVM } from '../models/home-page-vm.js';
 import { TmdbMovie } from '../models/tmdb-movie.js';
 
 export async function fetchPopularMovies() {
@@ -33,4 +34,33 @@ export async function fetchSearchMovies(query: string, page = 1) {
 
 export async function fetchSearchTv(query: string, page = 1) {
   return Promise.resolve([{ name: 'TV Show 1' }, { name: 'TV Show 2' }, { name: 'TV Show 3' }]);
+}
+
+export async function fechHomePageData(): Promise<HomePageVM> {
+  return Promise.resolve({
+    carousel: [],
+    recentMovies: [
+      {
+        adult: false,
+        backdrop_path: '/backdrop_path.jpg',
+        genre_ids: [1, 2],
+        id: 1000,
+        original_language: 'en',
+        original_title: 'Mocked Movie',
+        overview: 'Mocked overview for test purposes.',
+        popularity: 9999,
+        poster_path: '/poster_path.jpg',
+        release_date: '2020-10-10',
+        title: 'Mocked Movie',
+        video: false,
+        vote_average: 7.7,
+        vote_count: 687,
+      },
+    ] as TmdbMovie[],
+    tvShows: [],
+  });
+}
+
+export async function fetchSearchMulti() {
+  return Promise.resolve([]);
 }

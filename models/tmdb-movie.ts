@@ -15,6 +15,7 @@ export interface TmdbMovie {
   belongs_to_collection: null;
   budget: number;
   genres: Genre[];
+  genre_ids: number[];
   homepage: string;
   id: number;
   imdb_id: string;

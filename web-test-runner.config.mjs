@@ -1,5 +1,4 @@
 // import { playwrightLauncher } from '@web/test-runner-playwright';
-
 import { importMapsPlugin } from '@web/dev-server-import-maps';
 
 const filteredLogs = ['Running in dev mode', 'lit-html is in dev mode'];
@@ -28,7 +27,7 @@ export default /** @type {import("@web/test-runner").TestRunnerConfig} */ ({
       inject: {
         importMap: {
           imports: {
-            '/src/tmdb.api.ts': '/mocks/tmdb.api.ts',
+            '/out-tsc/src/tmdb.api.js': '/out-tsc/mocks/tmdb.api.js',
           },
         },
       },
