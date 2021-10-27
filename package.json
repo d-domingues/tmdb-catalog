@@ -66,6 +66,7 @@
       "@typescript-eslint"
     ],
     "rules": {
+      "wc/guard-super-call": 0,
       "import/no-duplicates": 0,
       "camelcase": 0,
       "no-return-assign": 0,

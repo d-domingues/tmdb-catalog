@@ -13,7 +13,7 @@ export class CarouselComponent extends LitElement {
   @property({ type: Array }) slides: TmdbDataObj[] = [];
   @state() slideIdx = 0;
 
-  private intervalId!: NodeJS.Timeout;
+  private intervalId!: any;
 
   constructor() {
     super();
@@ -51,12 +51,13 @@ export class CarouselComponent extends LitElement {
   render() {
     return html`
       ${this.slides.map(
-        (item, idx) =>
-          html`<img
+        (item, idx) => html`
+          <img
             style="--slide: ${this.slideIdx}; grid-area: slide${idx}"
             src=${imgSrc(item.backdrop_path)}
             alt=""
-          />`
+          />
+        `
       )}
       ${this.titleTmpl()}
       <div class="slide-btns">
