@@ -1,3 +1,5 @@
+import '../components/horizontal-display.js';
+
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';

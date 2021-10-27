@@ -1,4 +1,4 @@
-import './components/overlay-menu.js';
+import './components/overlay-menu.ts';
 
 import { html, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';

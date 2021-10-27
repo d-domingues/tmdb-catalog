@@ -1,6 +1,5 @@
-import '../components/cast-scroller.js';
-import '../components/loading-spinner.js';
-import '../components/mark-favorite.js';
+import '../components/loading-spinner.ts';
+import '../components/mark-favorite.ts';
 
 import { RouterLocation } from '@vaadin/router';
 import { html, LitElement } from 'lit';

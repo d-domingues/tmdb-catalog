@@ -10,7 +10,7 @@ export class HorizontalDisplay extends LitElement {
   static styles = horizontalDisplaySyles;
 
   @property() title: string = '';
-  @property({ type: Array }) items!: TmdbDataObj[];
+  @property({ type: Array }) items: TmdbDataObj[] = [];
 
   render() {
     return html`

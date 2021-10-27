@@ -9,7 +9,7 @@ const headers = Object.freeze({
   'Content-Type': 'application/json',
 });
 
-let session_id = '';
+let session_id = localStorage.getItem('session_id') as string;
 
 (async () => {
   const params = new URLSearchParams({ api_key }).toString();
@@ -38,6 +38,7 @@ let session_id = '';
   ).then(resp => resp.json());
 
   session_id = response.session_id;
+  localStorage.setItem('session_id', String(session_id));
 })();
 
 export async function fetchDiscoverMovies() {
