@@ -1,1 +1,0 @@
-{"version":3,"file":"account-states.js","sourceRoot":"","sources":["../../models/account-states.ts"],"names":[],"mappings":"","sourcesContent":["export interface AccountStates {\r\n  id: number;\r\n  favorite: boolean;\r\n  rated: boolean;\r\n  watchlist: boolean;\r\n}\r\n"]}
