@@ -1,0 +1,1 @@
+{"version":3,"file":"home-page-vm.js","sourceRoot":"","sources":["../../models/home-page-vm.ts"],"names":[],"mappings":"","sourcesContent":["import { TmdbDataObj } from './tmdb-data-obj.js';\r\n\r\nexport interface HomePageVM {\r\n  carousel: TmdbDataObj[];\r\n  recentMovies: TmdbDataObj[];\r\n  tvShows: TmdbDataObj[];\r\n}\r\n"]}
