@@ -1,15 +1,13 @@
-import '../components/loading-spinner.ts';
-import '../components/mark-favorite.ts';
-
 import { RouterLocation } from '@vaadin/router';
 import { html, LitElement } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
-
 import { getYear, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
+import '../components/loading-spinner.js';
+import '../components/mark-favorite.js';
 import { imgSrc } from '../directives/img-directive.js';
 import { getRouter } from '../router.js';
-import { getAccountStates, getDetails } from '../tmdb.api.js';
+import { getDetails } from '../tmdb.api.js';
 import styles from './media-details.styles.js';
 
 @customElement('media-details')
@@ -70,8 +68,8 @@ export class MediaDetails extends LitElement {
     const { type, id }: any = this.location?.params;
 
     return until(
-      Promise.all([getDetails(type, id), getAccountStates(type, id)]).then(
-        ([details, { favorite }]) => html`
+      getDetails(type, id).then(
+        details => html`
           <div id="stack">
             <img id="backdrop-img" src=${imgSrc(details.backdrop_path)} alt="" />
             <!-- TITLE -->
@@ -101,7 +99,7 @@ export class MediaDetails extends LitElement {
             <!-- GENRES -->
             ${this.genres(details)}
             <!-- MARK FAVORITE BTN -->
-            <mark-favorite mediaId=${id} mediaType=${type} ?favorite=${favorite}></mark-favorite>
+            <mark-favorite mediaId=${id} mediaType=${type}></mark-favorite>
             <img
               height="25"
               src="assets/share.svg"

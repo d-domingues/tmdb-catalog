@@ -4,6 +4,7 @@ import {
   Genre,
   Images,
   LastEpisodeToAir,
+  MediaType,
   Network,
   ProductionCountry,
   Season,
@@ -46,4 +47,5 @@ export interface TmdbTvShow {
   videos: Videos;
   images: Images;
   credits: Credits;
+  media_type: MediaType;
 }

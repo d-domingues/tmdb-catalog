@@ -81,9 +81,7 @@ export class OverlayMenu extends LitElement {
   ];
 
   async onClose() {
-    if (this.parent instanceof (await import('../movie-catalog.js')).MovieCatalog) {
-      this.parent.show = false;
-    }
+    (this.parent as any).show = false;
   }
 
   render() {

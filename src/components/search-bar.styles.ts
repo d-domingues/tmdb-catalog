@@ -13,19 +13,24 @@ export const searchBarStyles = css`
     padding: 8px;
     outline: none;
     text-indent: 24px;
-    margin: 10px 0;
   }
 
   @media only screen and (min-width: 601px) {
     input#search-input {
-      transition: 400ms ease-in-out;
+      transition: width 400ms ease-in-out;
       width: 120px;
       opacity: 0.4;
+      margin: 0;
     }
 
     input#search-input:focus {
       width: 400px;
       opacity: 1;
+    }
+
+    .show input#search-input:focus {
+      border-radius: 18px 18px 0 0;
+      border-bottom: 0;
     }
   }
 
@@ -44,7 +49,7 @@ export const searchBarStyles = css`
     max-height: 0;
   }
 
-  #suggestions.show {
+  .show #suggestions {
     border: 2px solid #333333;
     border-top: none;
     max-height: 400px;
@@ -57,5 +62,56 @@ export const searchBarStyles = css`
   .star {
     width: 20px;
     height: 20px;
+  }
+`;
+
+export const suggestionOptionStyles = css`
+  :host {
+    display: block;
+    background: white;
+    min-height: 32px;
+  }
+
+  :host[selected='true'] a {
+    background: lightblue;
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+    font-size: 14px;
+  }
+
+  .details-option {
+    display: grid;
+    grid-template-areas:
+      'img title title title'
+      'img avg_rating rating like';
+    grid-template-columns: min-content min-content auto min-content;
+    column-gap: 8px;
+    padding-right: 10px;
+    margin: 0px;
+    align-items: end;
+  }
+
+  .details-option img {
+    grid-area: img;
+    height: 50px;
+  }
+
+  .details-option span {
+    grid-area: title;
+  }
+
+  .details-option label {
+    grid-area: avg_rating;
+  }
+
+  .details-option star-rating {
+    grid-area: rating;
+  }
+
+  .details-option mark-favorite {
+    grid-area: like;
   }
 `;

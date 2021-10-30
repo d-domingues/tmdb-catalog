@@ -7,9 +7,10 @@
   "scripts": {
     "build": "rimraf dist && tsc && rollup -c rollup.config.js && npm run analyze -- --exclude dist",
     "build:watch": "tsc --watch",
-    "start": "wds",
-    "start:transpiler": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wds\"",
-    "start:build": "wds --root-dir dist --app-index index.html --open",
+    "start": "yarn build:esbuild && wds",
+    "build:esbuild": "esbuild src/movie-catalog.ts --bundle --outdir=dist --minify --sourcemap --format=esm --splitting",
+    "start:dev": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wds\"",
+    "start:wds": "wds --root-dir dist --app-index index.html --open",
     "test": "yarn build && web-test-runner out-tsc/test/**/*.test.js --node-resolve",
     "test:watch": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wtr --watch\"",
     "test:watch2": "web-test-runner dist/test/**/*.test.js --node-resolve --watch",

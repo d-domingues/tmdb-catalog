@@ -1,9 +1,7 @@
-import './components/overlay-menu.ts';
-
 import { html, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ref } from 'lit/directives/ref.js';
-
+import './components/overlay-menu.js';
 import { movieCatalogStyles } from './movie-catalog.styles.js';
 import { setRouter } from './router.js';
 

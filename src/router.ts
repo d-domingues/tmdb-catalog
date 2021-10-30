@@ -1,6 +1,5 @@
-import './views/home-page.js';
-
 import { Router } from '@vaadin/router';
+import './views/home-page.js';
 
 // let router: Node;
 

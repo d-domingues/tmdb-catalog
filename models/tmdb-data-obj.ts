@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import { TmdbMovie } from './tmdb-movie.js';
 import { TmdbTvShow } from './tmdb-tv-show.js';
 
@@ -10,7 +11,7 @@ export const isMovie = (pet: TmdbDataObj): pet is TmdbMovie =>
 export const getYear = (item: TmdbDataObj) =>
   (isMovie(item) ? item?.release_date : item?.first_air_date)?.split('-')?.at(0) ?? '';
 
-export enum Department {
+export enum MediaDepartment {
   Acting = 'Acting',
   Art = 'Art',
   Camera = 'Camera',
@@ -82,7 +83,7 @@ export interface Cast {
   adult: boolean;
   gender: number;
   id: number;
-  known_for_department: Department;
+  known_for_department: MediaDepartment;
   name: string;
   original_name: string;
   popularity: number;
@@ -91,7 +92,7 @@ export interface Cast {
   character?: string;
   credit_id: string;
   order?: number;
-  department?: Department;
+  department?: MediaDepartment;
   job?: string;
 }
 
@@ -140,3 +141,5 @@ export interface ReleaseDatesResult {
 export interface ReleaseDates {
   results: ReleaseDatesResult[];
 }
+
+export type MediaType = 'movie' | 'tv';

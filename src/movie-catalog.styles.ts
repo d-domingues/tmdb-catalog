@@ -2,7 +2,7 @@ import { css } from 'lit';
 
 export const movieCatalogStyles = css`
   :host {
-    font-size: calc(10px + 2vmin);
+    font-size: calc(4px + 2vmin);
     color: #1a2b42;
   }
 

@@ -2,7 +2,7 @@ import { html, nothing } from 'lit';
 import { Directive, directive, PartInfo, PartType } from 'lit/directive.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-export type BackdropSize = 'w300' | 'w780' | '1280' | 'original';
+export type BackdropSize = 'w300' | 'w780' | 'w1280' | 'original';
 export type PosterSize = 'w45' | 'w92' | 'w154' | 'w185' | 'w300' | 'w500' | 'original';
 
 class ImgDirective extends Directive {

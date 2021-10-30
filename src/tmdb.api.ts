@@ -1,5 +1,6 @@
 import { AccountStates } from '../models/account-states.js';
 import { HomePageVM } from '../models/home-page-vm.js';
+import { MediaType } from '../models/tmdb-data-obj.js';
 import { TmdbMovie } from '../models/tmdb-movie.js';
 import { TmdbTvShow } from '../models/tmdb-tv-show.js';
 
@@ -149,7 +150,7 @@ export async function fetchSearchMulti(query: string) {
   }
 }
 
-export async function getDetails(type: 'movie' | 'tv', movie_id: number, language = 'es-ES') {
+export async function getDetails(type: MediaType, movie_id: number, language = 'es-ES') {
   try {
     const params = new URLSearchParams({
       api_key,
@@ -164,11 +165,7 @@ export async function getDetails(type: 'movie' | 'tv', movie_id: number, languag
   }
 }
 
-export async function markAsFavorite(
-  media_type: 'movie' | 'tv',
-  media_id: number,
-  favorite: boolean
-) {
+export async function markAsFavorite(media_type: MediaType, media_id: number, favorite: boolean) {
   const params = new URLSearchParams({ session_id, api_key }).toString();
 
   return fetch(`https://api.themoviedb.org/3/account/{account_id}/favorite?${params}`, {
@@ -179,7 +176,7 @@ export async function markAsFavorite(
 }
 
 export async function getAccountStates(
-  media_type: 'movie' | 'tv',
+  media_type: MediaType,
   media_id: number
 ): Promise<AccountStates> {
   const params = new URLSearchParams({ session_id, api_key }).toString();

@@ -2,6 +2,7 @@ import {
   Credits,
   Genre,
   Images,
+  MediaType,
   ProductionCompany,
   ProductionCountry,
   ReleaseDates,
@@ -40,4 +41,5 @@ export interface TmdbMovie {
   images: Images;
   credits: Credits;
   release_dates: ReleaseDates;
+  media_type: MediaType;
 }

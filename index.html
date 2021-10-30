@@ -19,11 +19,18 @@
     }
   </style>
   <title>movie-catalog</title>
+
+  <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
   <movie-catalog></movie-catalog>
-  <script type="module" src="./src/movie-catalog.ts"></script>
+  <script type="module" src="./dist/src/movie-catalog.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+    }
+  </script>
 </body>
 
 </html>

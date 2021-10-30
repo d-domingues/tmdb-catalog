@@ -1,3 +1,4 @@
+/* eslint-disable wc/guard-super-call */
 import { html, LitElement, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -13,6 +14,7 @@ export class CarouselComponent extends LitElement {
   @property({ type: Array }) slides: TmdbDataObj[] = [];
   @state() slideIdx = 0;
 
+  // eslint-disable-next-line no-undef
   private intervalId!: NodeJS.Timeout;
 
   constructor() {
@@ -51,12 +53,13 @@ export class CarouselComponent extends LitElement {
   render() {
     return html`
       ${this.slides.map(
-        (item, idx) =>
-          html`<img
+        (item, idx) => html`
+          <img
             style="--slide: ${this.slideIdx}; grid-area: slide${idx}"
-            src=${imgSrc(item.backdrop_path)}
+            src=${imgSrc(item.backdrop_path, 'w1280')}
             alt=""
-          />`
+          />
+        `
       )}
       ${this.titleTmpl()}
       <div class="slide-btns">
