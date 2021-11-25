@@ -34,16 +34,23 @@ const styles = css`
 
   #details {
     display: flex;
-    align-items: center;
     column-gap: 12px;
+    margin: 10px 0;
+  }
+
+  #genres {
+    min-width: 36%;
   }
 
   .genre {
     border: solid 1.5px darkgray;
     border-radius: 26px;
-    padding: 8px 18px;
+    padding: 5px 12px;
     font-size: 14px;
     color: darkgray;
+    width: max-content;
+    margin: 2px;
+    display: inline-block;
   }
 
   #overview {

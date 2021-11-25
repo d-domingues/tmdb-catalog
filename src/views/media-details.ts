@@ -1,10 +1,12 @@
+import '../components/loading-spinner.js';
+import '../components/mark-favorite.js';
+
 import { RouterLocation } from '@vaadin/router';
 import { html, LitElement } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
+
 import { getYear, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
-import '../components/loading-spinner.js';
-import '../components/mark-favorite.js';
 import { imgSrc } from '../directives/img-directive.js';
 import { getRouter } from '../router.js';
 import { getDetails } from '../tmdb.api.js';
@@ -88,16 +90,16 @@ export class MediaDetails extends LitElement {
           <div id="details">
             <!-- DIRECTOR -->
             <div>
-              <h4>Director</h4>
+              <b>Director</b>
               ${this.director(details)}
             </div>
             <!-- COUNTRY -->
             <div>
-              <h4>País</h4>
+              <b>País</b>
               ${this.productionCountries(details)}
             </div>
             <!-- GENRES -->
-            ${this.genres(details)}
+            <div id="genres">${this.genres(details)}</div>
             <!-- MARK FAVORITE BTN -->
             <mark-favorite mediaId=${id} mediaType=${type}></mark-favorite>
             <img

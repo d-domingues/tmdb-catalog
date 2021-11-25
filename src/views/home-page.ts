@@ -15,14 +15,14 @@ export class HomePage extends LitElement {
     search-bar {
       position: absolute;
       z-index: 1;
-      top: 58px;
-      margin-left: 10px;
+      top: 12px;
+      left: 10px;
     }
 
     @media only screen and (max-width: 600px) {
       search-bar {
         position: initial;
-        margin: 0;
+        display: block;
       }
     }
   `;

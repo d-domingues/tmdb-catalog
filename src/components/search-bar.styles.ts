@@ -23,12 +23,12 @@ export const searchBarStyles = css`
       margin: 0;
     }
 
-    input#search-input:focus {
+    #search-input:focus {
       width: 400px;
       opacity: 1;
     }
 
-    .show input#search-input:focus {
+    #search-input.show:focus {
       border-radius: 18px 18px 0 0;
       border-bottom: 0;
     }
@@ -40,46 +40,39 @@ export const searchBarStyles = css`
     }
   }
 
-  #suggestions {
-    position: absolute;
-    z-index: 20;
-    overflow: hidden;
+  suggestion-options {
+    display: block;
     width: calc(100% - 4px);
-    transition: 400ms ease-in-out;
-    max-height: 0;
-  }
-
-  .show #suggestions {
+    background: white;
+    overflow: hidden;
     border: 2px solid #333333;
     border-top: none;
-    max-height: 400px;
+    border-bottom: 0;
+    /* animation */
+    transition: 300ms ease-in-out;
+    max-height: 0vh;
   }
 
-  #suggestions suggestion-option[selected='true'] {
-    background: lightblue;
-  }
-
-  .star {
-    width: 20px;
-    height: 20px;
+  suggestion-options.show {
+    border-bottom: 2px solid #333333;
+    max-height: 90vh;
   }
 `;
 
 export const suggestionOptionStyles = css`
-  :host {
-    display: block;
-    background: white;
-    min-height: 32px;
-  }
-
-  :host[selected='true'] a {
-    background: lightblue;
-  }
-
   a {
     text-decoration: none;
     color: black;
     font-size: 14px;
+  }
+
+  a[selected='true'] {
+    background: lightblue;
+  }
+
+  .search-option {
+    display: block;
+    padding: 10px 8px;
   }
 
   .details-option {
@@ -88,7 +81,7 @@ export const suggestionOptionStyles = css`
       'img title title title'
       'img avg_rating rating like';
     grid-template-columns: min-content min-content auto min-content;
-    column-gap: 8px;
+    column-gap: 4px;
     padding-right: 10px;
     margin: 0px;
     align-items: end;
@@ -96,7 +89,7 @@ export const suggestionOptionStyles = css`
 
   .details-option img {
     grid-area: img;
-    height: 50px;
+    height: 46px;
   }
 
   .details-option span {

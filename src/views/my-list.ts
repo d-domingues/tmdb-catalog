@@ -4,7 +4,7 @@ import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 
-import { getFavorites } from '../tmdb.api';
+import { getFavorites } from '../tmdb.api.js';
 
 @customElement('my-list')
 export class MyList extends LitElement {

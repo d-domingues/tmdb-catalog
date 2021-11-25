@@ -27,7 +27,9 @@ export const movieCatalogStyles = css`
 
   main {
     max-width: 1000px;
-    margin: 50px auto 40px;
+    margin: 58px auto 40px;
+    min-height: calc(100vh - 210px);
+    position: relative;
   }
 
   footer {
