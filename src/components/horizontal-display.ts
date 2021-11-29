@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { getYear, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
+import { getMediaType, getYear, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
 import { horizontalDisplaySyles } from './styles.js';
 
@@ -18,22 +18,18 @@ export class HorizontalDisplay extends LitElement {
       ${this.items.map(
         item => html`
           <div class="movie-card">
-            <a href="details/${isMovie(item) ? 'movie/' : 'tv/'}${item.id}">
+            <a href="details/${getMediaType(item)}/${item.id}">
               <img src=${imgSrc(item.poster_path, 'w185')} alt="" />
             </a>
             <b class="label"> ${isMovie(item) ? item.title : item.name} (${getYear(item)}) </b>
             <span class="rating">
               ${item.vote_average}
-              <star-rating
-                mediaId=${item.id}
-                mediaType=${isMovie(item) ? 'movie' : 'tv'}
-                rating=${item.vote_average}
-              ></star-rating>
+              <star-rating .item=${item}></star-rating>
             </span>
             <mark-favorite
               size="18"
               mediaId=${item.id}
-              mediaType=${isMovie(item) ? 'movie' : 'tv'}
+              mediaType=${getMediaType(item)}
             ></mark-favorite>
           </div>
         `

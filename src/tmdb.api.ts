@@ -176,7 +176,7 @@ export async function markAsFavorite(media_type: MediaType, media_id: number, fa
     method: 'POST',
     headers,
     body: JSON.stringify({ media_type, media_id, favorite }),
-  }).then(resp => resp.json());
+  });
 }
 
 /**
@@ -209,20 +209,18 @@ export async function getFavorites(page = 1): Promise<{ movie: TmdbMovie[]; tv: 
 /**
  * Rating
  */
-export async function postRating(
-  media_type: MediaType,
-  media_id: number,
-  value: number
-): Promise<AccountStates> {
+export async function postRating(media_type: MediaType, media_id: number, value: number) {
   if (value > 10 || value < 0) {
     throw new Error('invaid value');
   }
 
   const params = new URLSearchParams({ session_id, api_key }).toString();
 
-  return fetch(`https://api.themoviedb.org/3/${media_type}/${media_id}/rating?${params}`, {
+  await fetch(`https://api.themoviedb.org/3/${media_type}/${media_id}/rating?${params}`, {
     method: 'POST',
     headers,
     body: JSON.stringify({ value }),
-  }).then(resp => resp.json());
+  });
+
+  return getDetails(media_type, media_id).then(o => o.vote_average);
 }

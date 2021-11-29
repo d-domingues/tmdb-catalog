@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-import { MediaType } from '../../models/tmdb-data-obj.js';
+import { customElement, property, state } from 'lit/decorators.js';
+import { getMediaType, getName, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { postRating } from '../tmdb.api.js';
 import './confirmation-modal.js';
 import { ConfirmationModal } from './confirmation-modal.js';
@@ -13,24 +13,18 @@ export class StarRating extends LitElement {
       width: 90px;
       cursor: pointer;
       display: block;
-      background: url('assets/shade-star.svg') repeat-x center left;
+      background: url(assets/shade-star.svg) repeat-x center left;
     }
 
     .star-filler {
       width: calc(var(--rating) * 10%);
       height: 100%;
-      background: url('assets/gold-star.svg') repeat-x center left;
+      background: url(assets/gold-star.svg) repeat-x center left;
     }
   `;
 
-  @property({ type: Number }) rating = 0;
-  @property() mediaType!: MediaType;
-  @property() mediaId!: number;
-
-  onMouse!: {
-    (arg0: boolean, arg1: MouseEvent): any;
-    (calc: boolean, e?: any): void;
-  };
+  @property() item!: TmdbDataObj;
+  @state() rating = 0;
 
   constructor() {
     super();
@@ -38,28 +32,43 @@ export class StarRating extends LitElement {
     // these events do not need to be removed from the element:
     // since they will only fire on user interaction if the component
     // is not present no events will be fired (no possible leakage)
-    this.addEventListener('mousemove', e => this.onMouse(true, e));
-    this.addEventListener('mouseout', e => this.onMouse(false, e));
-    this.addEventListener('click', () => this.confirmRating());
+    this.addEventListener('mousemove', e => this.onMouse(e));
+    this.addEventListener('mouseout', () => this.setRating());
+    this.addEventListener('click', e => this.confirmRating(e));
   }
 
   firstUpdated() {
-    this.onMouse = (() => {
-      const original = this.rating;
-
-      return (calc: boolean, e?: any) => {
-        this.rating = calc
-          ? Math.ceil(((e.clientX - e.target.getBoundingClientRect().left) / this.clientWidth) * 10)
-          : original;
-      };
-    })();
+    this.setRating();
   }
 
-  async confirmRating() {
+  setRating() {
+    this.rating = this.item.vote_average;
+  }
+
+  onMouse(e: any) {
+    this.rating = Math.ceil(
+      ((e.clientX - e.target.getBoundingClientRect().left) / this.clientWidth) * 10
+    );
+  }
+
+  async confirmRating(e: MouseEvent) {
+    e.preventDefault();
     const rated = this.rating;
     const modal = await ConfirmationModal.generate();
-    const resp = await modal.show(`Someter el rating: ${rated}?`);
-    return resp && postRating(this.mediaType, this.mediaId, rated);
+
+    const isConfirmed = await modal.show(html`
+      <b>Someter el rating</b>
+      <p>
+        Quieres atribuir a la ${isMovie(this.item) ? 'pelicula' : 'série'}
+        <b>${getName(this.item)}</b>
+        el rating de ${rated}?
+      </p>
+    `);
+
+    // if confirmed submits the rated value and feaches the new "vote_average" from DB
+    if (isConfirmed) {
+      this.rating = await postRating(getMediaType(this.item), this.item.id, rated);
+    }
   }
 
   render() {

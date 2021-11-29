@@ -4,13 +4,9 @@ export const confirmationModalStyles = css`
   #confirm-modal {
     position: fixed;
     z-index: 100;
-    padding-top: 100px;
-    left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
-    background-color: rgb(0, 0, 0);
     background-color: rgba(0, 0, 0, 0.4);
     /* animation */
     transition: 200ms ease-in-out;
@@ -26,6 +22,7 @@ export const confirmationModalStyles = css`
   .modal-content {
     background-color: #fefefe;
     position: absolute;
+    top: 40%;
     left: 50%;
     padding: 20px;
     border: 1px solid #888;

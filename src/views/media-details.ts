@@ -1,12 +1,10 @@
-import '../components/loading-spinner.js';
-import '../components/mark-favorite.js';
-
 import { RouterLocation } from '@vaadin/router';
 import { html, LitElement } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
-
-import { getYear, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
+import { getName, getYear, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
+import '../components/loading-spinner.js';
+import '../components/mark-favorite.js';
 import { imgSrc } from '../directives/img-directive.js';
 import { getRouter } from '../router.js';
 import { getDetails } from '../tmdb.api.js';
@@ -61,7 +59,7 @@ export class MediaDetails extends LitElement {
   share(details: TmdbDataObj) {
     navigator.share({
       title: 'Movie Catalog',
-      text: `Details for ${isMovie(details) ? details.title : details.name}`,
+      text: `Details for ${getName(details)}`,
       url: this.location.getUrl(),
     });
   }
@@ -76,7 +74,7 @@ export class MediaDetails extends LitElement {
             <img id="backdrop-img" src=${imgSrc(details.backdrop_path)} alt="" />
             <!-- TITLE -->
             <span id="title">
-              <b>${isMovie(details) ? details.title : details.name}</b>
+              <b>${getName(details)}</b>
               <div>
                 ${getYear(details) + this.runtimeInHHMM(details) + this.certification(details)}
               </div>
@@ -84,11 +82,7 @@ export class MediaDetails extends LitElement {
             <!-- RATING -->
             <span id="rating">
               <div style="text-align: right">${details.vote_average}</div>
-              <star-rating
-                mediaId=${details.id}
-                mediaType=${isMovie(details) ? 'movie' : 'tv'}
-                rating=${details.vote_average}
-              ></star-rating>
+              <star-rating .item=${details}></star-rating>
             </span>
           </div>
           <div id="details">

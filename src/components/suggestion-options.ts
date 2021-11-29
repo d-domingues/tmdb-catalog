@@ -1,14 +1,12 @@
-import './mark-favorite.js';
-import './star-rating.js';
-
 import { html, LitElement, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
-
-import { isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
+import { getMediaType, getName, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
 import { putRecentSearches } from '../storage.js';
+import './mark-favorite.js';
 import { suggestionOptionStyles } from './search-bar.styles.js';
+import './star-rating.js';
 
 @customElement('suggestion-options')
 export class SuggestionOptions extends LitElement {
@@ -17,13 +15,7 @@ export class SuggestionOptions extends LitElement {
   @property() options!: (string | TmdbDataObj)[];
   @property({ type: Number }) currentIdx = 0;
 
-  getName = (item: string | TmdbDataObj) => {
-    if (typeof item === 'string') {
-      return item;
-    }
-
-    return isMovie(item) ? item.title : item.name;
-  };
+  getItemName = (item: string | TmdbDataObj) => (typeof item === 'string' ? item : getName(item));
 
   getDate = (item: string | TmdbDataObj) => {
     if (typeof item !== 'string') {
@@ -83,20 +75,16 @@ export class SuggestionOptions extends LitElement {
       <a
         selected=${idx === this.currentIdx}
         class="details-option"
-        href="details/${isMovie(opt) ? 'movie' : 'tv'}/${id}"
+        href="details/${getMediaType(opt)}/${id}"
         @click=${() => putRecentSearches(opt)}
       >
         <img src=${imgSrc(poster_path, 'w45')} alt="" />
         <span>
-          <span opttxt> ${this.getName(opt)} </span>
+          <span opttxt> ${this.getItemName(opt)} </span>
           <span style="color: gray">${this.getDate(opt)}</span></span
         >
         <label>${vote_average}</label>
-        <star-rating
-          mediaId=${id}
-          mediaType=${isMovie(opt) ? 'movie' : 'tv'}
-          rating=${vote_average}
-        ></star-rating>
+        <star-rating .item=${opt}></star-rating>
         <mark-favorite size="16" mediaId=${id} mediaType=${media_type}></mark-favorite>
       </a>
     `;

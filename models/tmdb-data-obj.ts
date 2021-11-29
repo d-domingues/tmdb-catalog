@@ -2,15 +2,6 @@
 import { TmdbMovie } from './tmdb-movie.js';
 import { TmdbTvShow } from './tmdb-tv-show.js';
 
-export type TmdbDataObj = TmdbMovie | TmdbTvShow;
-
-// Type guard
-export const isMovie = (pet: TmdbDataObj): pet is TmdbMovie =>
-  (pet as TmdbMovie).title !== undefined;
-
-export const getYear = (item: TmdbDataObj) =>
-  (isMovie(item) ? item?.release_date : item?.first_air_date)?.split('-')?.at(0) ?? '';
-
 export enum MediaDepartment {
   Acting = 'Acting',
   Art = 'Art',
@@ -143,3 +134,17 @@ export interface ReleaseDates {
 }
 
 export type MediaType = 'movie' | 'tv';
+export type TmdbDataObj = TmdbMovie | TmdbTvShow;
+
+// Type guard
+export const isMovie = (obj: TmdbDataObj): obj is TmdbMovie =>
+  (obj as TmdbMovie).title !== undefined;
+
+export const getYear = (item: TmdbDataObj) =>
+  (isMovie(item) ? item?.release_date : item?.first_air_date)?.split('-')?.at(0) ?? '';
+
+export const getMediaType = (obj: TmdbDataObj): MediaType =>
+  (obj as TmdbMovie).media_type ?? isMovie(obj) ? 'movie' : 'tv';
+
+export const getName = (obj: TmdbDataObj): string =>
+  getMediaType(obj) === 'movie' ? (obj as TmdbMovie).title : (obj as TmdbTvShow).name;

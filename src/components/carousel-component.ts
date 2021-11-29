@@ -2,7 +2,7 @@
 import { html, LitElement, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
+import { getMediaType, getName, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
 import styles from './carousel-component.styles.js';
 
@@ -41,11 +41,7 @@ export class CarouselComponent extends LitElement {
     const item = this.slides[this.slideIdx];
 
     return item
-      ? html`
-          <a class="title" href="details/${isMovie(item) ? 'movie' : 'tv'}/${item.id}">
-            ${isMovie(item) ? item.title : item.name}
-          </a>
-        `
+      ? html`<a class="title" href="details/${getMediaType(item)}/${item.id}">${getName(item)}</a>`
       : nothing;
   };
 

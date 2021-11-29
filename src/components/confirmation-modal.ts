@@ -1,7 +1,6 @@
-import { html, LitElement, render } from 'lit';
+import { html, LitElement, render, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-
 import { buttonStyles } from '../cummon.styles.js';
 import { confirmationModalStyles } from './confirmation-modal.styles.js';
 
@@ -11,22 +10,17 @@ export class ConfirmationModal extends LitElement {
 
   @state() private showModal = false;
 
-  content = '';
-
+  private content: string | TemplateResult<1> = '';
   private resolve!: (value: boolean) => void;
 
-  show(content: string): Promise<boolean> {
+  show(content: string | TemplateResult<1>) {
     this.content = content;
     this.showModal = true;
-    return new Promise(res => (this.resolve = res));
-  }
-
-  close() {
-    this.showModal = false;
+    return new Promise<boolean>(res => (this.resolve = res));
   }
 
   private onRespond(response: boolean) {
-    this.close();
+    this.showModal = false;
     this.resolve(response);
   }
 
@@ -35,10 +29,10 @@ export class ConfirmationModal extends LitElement {
    * created yet and returns it (thus performing memoization)!
    */
   static generate(): Promise<ConfirmationModal> {
-    const modal: ConfirmationModal | null = document.querySelector('confirmation-modal');
+    const modalNode: ConfirmationModal | null = document.querySelector('confirmation-modal');
 
-    if (modal) {
-      return Promise.resolve(modal);
+    if (modalNode) {
+      return Promise.resolve(modalNode);
     }
 
     render(html`<confirmation-modal></confirmation-modal>`, document.body);
@@ -54,9 +48,13 @@ export class ConfirmationModal extends LitElement {
     return html`
       <div id="confirm-modal" class=${classMap({ active: this.showModal })}>
         <div class="modal-content">
-          <span class="close" @click=${this.close} @keyup=${this.close}>&times;</span>
-          <p>${this.content}</p>
-
+          <span
+            class="close"
+            @click=${() => this.onRespond(false)}
+            @keyup=${() => this.onRespond(false)}
+            >&times;</span
+          >
+          ${this.content}
           <button @click=${() => this.onRespond(true)}>Sí</button>
           <button @click=${() => this.onRespond(false)}>No</button>
         </div>
