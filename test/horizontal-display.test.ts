@@ -10,6 +10,7 @@ describe('HorizontalDisplay', () => {
     { poster_path: '/B' },
     { poster_path: '/C' },
   ] as TmdbMovie[];
+
   let element: HorizontalDisplay;
 
   beforeEach(async () => {

@@ -9,7 +9,7 @@ import { setRouter } from './router.js';
 export class MovieCatalog extends LitElement {
   static styles = movieCatalogStyles;
 
-  @property({ type: Boolean }) show = false;
+  @property() show = false;
 
   onOpenMenu() {
     this.show = true;

@@ -18,6 +18,7 @@ export const horizontalDisplaySyles = css`
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    position: relative;
     --label-height: 36px;
     --rating-height: 26px;
   }
@@ -49,11 +50,17 @@ export const horizontalDisplaySyles = css`
     align-items: center;
   }
 
+  .movie-card mark-favorite {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
+
   .rating {
     align-items: center;
     display: flex;
     justify-content: center;
-    column-gap: 6px;
+    column-gap: 4px;
   }
 
   /* Responsive for mobile devices */

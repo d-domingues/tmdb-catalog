@@ -1,6 +1,5 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-
 import { getYear, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
 import { horizontalDisplaySyles } from './styles.js';
@@ -10,11 +9,12 @@ export class HorizontalDisplay extends LitElement {
   static styles = horizontalDisplaySyles;
 
   @property() title: string = '';
-  @property({ type: Array }) items: TmdbDataObj[] = [];
+  @property() items: TmdbDataObj[] = [];
 
   render() {
     return html`
       <h5>${this.title}</h5>
+
       ${this.items.map(
         item => html`
           <div class="movie-card">
@@ -24,8 +24,17 @@ export class HorizontalDisplay extends LitElement {
             <b class="label"> ${isMovie(item) ? item.title : item.name} (${getYear(item)}) </b>
             <span class="rating">
               ${item.vote_average}
-              <star-rating size="16" rating=${item.vote_average}></star-rating>
+              <star-rating
+                mediaId=${item.id}
+                mediaType=${isMovie(item) ? 'movie' : 'tv'}
+                rating=${item.vote_average}
+              ></star-rating>
             </span>
+            <mark-favorite
+              size="18"
+              mediaId=${item.id}
+              mediaType=${isMovie(item) ? 'movie' : 'tv'}
+            ></mark-favorite>
           </div>
         `
       )}

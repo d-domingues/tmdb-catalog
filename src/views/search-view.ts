@@ -1,43 +1,25 @@
-import '../components/search-bar.js';
-
 import { RouterLocation } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
-
 import { TmdbDataObj } from '../../models/tmdb-data-obj.js';
+import '../components/search-bar.js';
+import { buttonStyles } from '../cummon.styles.js';
 import { getRouter } from '../router.js';
 import { fetchSearchMovies, fetchSearchTv } from '../tmdb.api.js';
 
 @customElement('search-view')
 export class SearchView extends LitElement {
-  static styles = css`
-    horizontal-display {
-      margin-bottom: 20px;
-    }
+  static styles = [
+    buttonStyles,
+    css`
+      horizontal-display {
+        margin-bottom: 20px;
+      }
+    `,
+  ];
 
-    button {
-      outline: none;
-      padding: 6px 30px;
-      cursor: pointer;
-      background: cornflowerblue;
-      border: 2px solid royalblue;
-      border-radius: 6px;
-      color: white;
-    }
-
-    button[disabled] {
-      opacity: 0.4;
-      pointer-events: none;
-      cursor: not-allowed;
-    }
-
-    button#forward {
-      float: right;
-    }
-  `;
-
-  @property({ type: Object }) location: RouterLocation = getRouter().location;
+  @property() location: RouterLocation = getRouter().location;
   @state() page = 1;
 
   render() {

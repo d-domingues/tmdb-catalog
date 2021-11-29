@@ -2,7 +2,6 @@
 import { html, LitElement, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-
 import { isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
 import styles from './carousel-component.styles.js';
@@ -11,7 +10,7 @@ import styles from './carousel-component.styles.js';
 export class CarouselComponent extends LitElement {
   static styles = styles;
 
-  @property({ type: Array }) slides: TmdbDataObj[] = [];
+  @property() slides: TmdbDataObj[] = [];
   @state() slideIdx = 0;
 
   // eslint-disable-next-line no-undef

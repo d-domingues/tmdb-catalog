@@ -14,7 +14,7 @@ import { suggestionOptionStyles } from './search-bar.styles.js';
 export class SuggestionOptions extends LitElement {
   static styles = suggestionOptionStyles;
 
-  @property({ type: Array }) options!: (string | TmdbDataObj)[];
+  @property() options!: (string | TmdbDataObj)[];
   @property({ type: Number }) currentIdx = 0;
 
   getName = (item: string | TmdbDataObj) => {
@@ -92,7 +92,11 @@ export class SuggestionOptions extends LitElement {
           <span style="color: gray">${this.getDate(opt)}</span></span
         >
         <label>${vote_average}</label>
-        <star-rating size="16" rating=${vote_average}></star-rating>
+        <star-rating
+          mediaId=${id}
+          mediaType=${isMovie(opt) ? 'movie' : 'tv'}
+          rating=${vote_average}
+        ></star-rating>
         <mark-favorite size="16" mediaId=${id} mediaType=${media_type}></mark-favorite>
       </a>
     `;

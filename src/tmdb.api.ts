@@ -1,6 +1,6 @@
 import { AccountStates } from '../models/account-states.js';
 import { HomePageVM } from '../models/home-page-vm.js';
-import { MediaType } from '../models/tmdb-data-obj.js';
+import { MediaType, TmdbDataObj } from '../models/tmdb-data-obj.js';
 import { TmdbMovie } from '../models/tmdb-movie.js';
 import { TmdbTvShow } from '../models/tmdb-tv-show.js';
 
@@ -150,7 +150,11 @@ export async function fetchSearchMulti(query: string) {
   }
 }
 
-export async function getDetails(type: MediaType, movie_id: number, language = 'es-ES') {
+export async function getDetails(
+  type: MediaType,
+  movie_id: number,
+  language = 'es-ES'
+): Promise<TmdbDataObj> {
   try {
     const params = new URLSearchParams({
       api_key,
@@ -161,7 +165,7 @@ export async function getDetails(type: MediaType, movie_id: number, language = '
     const req = await fetch(`https://api.themoviedb.org/3/${type}/${movie_id}?${params}`);
     return req.json();
   } catch (error) {
-    return {} as TmdbMovie;
+    return {} as TmdbDataObj;
   }
 }
 
@@ -175,6 +179,9 @@ export async function markAsFavorite(media_type: MediaType, media_id: number, fa
   }).then(resp => resp.json());
 }
 
+/**
+ * session user's rated and favorite info
+ */
 export async function getAccountStates(
   media_type: MediaType,
   media_id: number
@@ -197,4 +204,25 @@ export async function getFavorites(page = 1): Promise<{ movie: TmdbMovie[]; tv: 
       resp.json()
     ),
   ]).then(([movie, tv]) => ({ movie: movie.results, tv: tv.results }));
+}
+
+/**
+ * Rating
+ */
+export async function postRating(
+  media_type: MediaType,
+  media_id: number,
+  value: number
+): Promise<AccountStates> {
+  if (value > 10 || value < 0) {
+    throw new Error('invaid value');
+  }
+
+  const params = new URLSearchParams({ session_id, api_key }).toString();
+
+  return fetch(`https://api.themoviedb.org/3/${media_type}/${media_id}/rating?${params}`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ value }),
+  }).then(resp => resp.json());
 }

@@ -5,7 +5,23 @@ import { classMap } from 'lit/directives/class-map.js';
 @customElement('overlay-menu')
 export class OverlayMenu extends LitElement {
   static styles = css`
-    #modal {
+    #menu-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 90;
+      /* animation */
+      transition: 200ms ease-in-out;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #menu-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #menu-modal {
       display: flex;
       flex-direction: column;
       gap: 1vh;
@@ -19,32 +35,16 @@ export class OverlayMenu extends LitElement {
       transform: translate(-50%, -50%) scale(0);
     }
 
-    #modal.active {
+    #menu-overlay.active #menu-modal {
       transform: translate(-50%, -50%) scale(1);
     }
 
-    #modal a {
+    #menu-modal a {
       display: block;
       text-decoration: none;
       color: white;
       font-size: 4vh;
       margin: 4px;
-    }
-
-    #overlay {
-      position: fixed;
-      inset: 0;
-      background-color: rgba(0, 0, 0, 0.8);
-      z-index: 90;
-      /* animation */
-      transition: 200ms ease-in-out;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    #overlay.active {
-      opacity: 1;
-      pointer-events: all;
     }
 
     #close-btn {
@@ -67,7 +67,7 @@ export class OverlayMenu extends LitElement {
     }
   `;
 
-  @property({ type: Boolean }) show = false;
+  @property() show = false;
 
   readonly parent = document.querySelector('movie-catalog');
 
@@ -76,7 +76,7 @@ export class OverlayMenu extends LitElement {
     { path: 'search-view', label: 'Buscador' },
     { path: 'tv-shows', label: 'Series TV' },
     { path: 'movie-list', label: 'Peliculas' },
-    { path: 'my-list', label: 'Mi Lista' },
+    { path: 'my-list', label: 'Mis Favoritos' },
     { path: 'my-profile', label: 'Mi Perfil' },
   ];
 
@@ -86,14 +86,14 @@ export class OverlayMenu extends LitElement {
 
   render() {
     return html`
-      <nav id="modal" class=${classMap({ active: this.show })}>
-        ${this.views.map(
-          ({ path, label }) => html` <a href=${path} @click=${this.onClose}> ${label} </a> `
-        )}
-      </nav>
-
-      <div id="overlay" class=${classMap({ active: this.show })}>
+      <div id="menu-overlay" class=${classMap({ active: this.show })}>
         <span id="close-btn" @click=${this.onClose} @keyup=${this.onClose}> &times; </span>
+
+        <nav id="menu-modal">
+          ${this.views.map(
+            ({ path, label }) => html` <a href=${path} @click=${this.onClose}> ${label} </a> `
+          )}
+        </nav>
       </div>
     `;
   }

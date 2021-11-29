@@ -16,7 +16,7 @@ import styles from './media-details.styles.js';
 export class MediaDetails extends LitElement {
   static styles = styles;
 
-  @property({ type: Object }) location: RouterLocation = getRouter().location;
+  @property() location: RouterLocation = getRouter().location;
   @query('#cast-scroller') castScroller!: HTMLDivElement;
 
   director = (details: TmdbDataObj) =>
@@ -84,7 +84,11 @@ export class MediaDetails extends LitElement {
             <!-- RATING -->
             <span id="rating">
               <div style="text-align: right">${details.vote_average}</div>
-              <star-rating size="16" rating=${details.vote_average}></star-rating>
+              <star-rating
+                mediaId=${details.id}
+                mediaType=${isMovie(details) ? 'movie' : 'tv'}
+                rating=${details.vote_average}
+              ></star-rating>
             </span>
           </div>
           <div id="details">

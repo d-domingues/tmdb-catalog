@@ -1,14 +1,13 @@
 import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-
 import { MediaType } from '../../models/tmdb-data-obj.js';
 import { getAccountStates, markAsFavorite } from '../tmdb.api.js';
 
 @customElement('mark-favorite')
 export class MarkFavorite extends LitElement {
-  @property({ type: String }) mediaType!: MediaType;
-  @property({ type: Number }) mediaId!: number;
-  @property({ type: Number }) size = 25;
+  @property() mediaType!: MediaType;
+  @property() mediaId!: number;
+  @property() size = 25;
 
   @state() favorite = false;
 

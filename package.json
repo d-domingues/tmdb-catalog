@@ -11,7 +11,7 @@
     "build:esbuild": "esbuild src/movie-catalog.ts --bundle --outdir=dist --minify --sourcemap --format=esm --splitting",
     "start:dev": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wds\"",
     "start:wds": "wds --root-dir dist --app-index index.html --open",
-    "test": "yarn build && web-test-runner out-tsc/test/**/*.test.js --node-resolve",
+    "test": "yarn build && web-test-runner dist/test/**/*.test.js --node-resolve",
     "test:watch": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wtr --watch\"",
     "test:watch2": "web-test-runner dist/test/**/*.test.js --node-resolve --watch",
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
