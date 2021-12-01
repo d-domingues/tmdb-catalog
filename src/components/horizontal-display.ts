@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { getMediaType, getYear, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
+import { getMediaType, getName, getYear, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
 import { horizontalDisplaySyles } from './styles.js';
 
@@ -21,7 +21,7 @@ export class HorizontalDisplay extends LitElement {
             <a href="details/${getMediaType(item)}/${item.id}">
               <img src=${imgSrc(item.poster_path, 'w185')} alt="" />
             </a>
-            <b class="label"> ${isMovie(item) ? item.title : item.name} (${getYear(item)}) </b>
+            <b class="label"> ${getName(item)} (${getYear(item)}) </b>
             <span class="rating">
               ${item.vote_average}
               <star-rating .item=${item}></star-rating>

@@ -1,6 +1,5 @@
 import { html, LitElement, render, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { classMap } from 'lit/directives/class-map.js';
 import { buttonStyles } from '../cummon.styles.js';
 import { confirmationModalStyles } from './confirmation-modal.styles.js';
 
@@ -46,7 +45,7 @@ export class ConfirmationModal extends LitElement {
 
   render() {
     return html`
-      <div id="confirm-modal" class=${classMap({ active: this.showModal })}>
+      <div id="confirm-modal" class=${this.showModal && 'active'}>
         <div class="modal-content">
           <span
             class="close"

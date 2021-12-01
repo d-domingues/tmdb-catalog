@@ -59,7 +59,7 @@ export class StarRating extends LitElement {
     const isConfirmed = await modal.show(html`
       <b>Someter el rating</b>
       <p>
-        Quieres atribuir a la ${isMovie(this.item) ? 'pelicula' : 'série'}
+        Quieres atribuir a la ${isMovie(this.item) ? 'película' : 'série'}
         <b>${getName(this.item)}</b>
         el rating de ${rated}?
       </p>

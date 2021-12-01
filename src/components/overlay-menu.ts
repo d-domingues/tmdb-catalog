@@ -1,6 +1,5 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { classMap } from 'lit/directives/class-map.js';
 
 @customElement('overlay-menu')
 export class OverlayMenu extends LitElement {
@@ -74,8 +73,8 @@ export class OverlayMenu extends LitElement {
   views = [
     { path: 'home-page', label: 'Inicio' },
     { path: 'search-view', label: 'Buscador' },
-    { path: 'tv-shows', label: 'Series TV' },
     { path: 'movie-list', label: 'Peliculas' },
+    { path: 'tv-shows', label: 'Series TV' },
     { path: 'my-list', label: 'Mis Favoritos' },
     { path: 'my-profile', label: 'Mi Perfil' },
   ];
@@ -86,7 +85,7 @@ export class OverlayMenu extends LitElement {
 
   render() {
     return html`
-      <div id="menu-overlay" class=${classMap({ active: this.show })}>
+      <div id="menu-overlay" class=${this.show && 'active'}>
         <span id="close-btn" @click=${this.onClose} @keyup=${this.onClose}> &times; </span>
 
         <nav id="menu-modal">

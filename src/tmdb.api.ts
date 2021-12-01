@@ -42,6 +42,9 @@ let session_id = localStorage.getItem('session_id') as string;
   localStorage.setItem('session_id', String(session_id));
 })();
 
+/**
+ * Most popular movies in the last 3 months
+ */
 export async function fetchDiscoverMovies() {
   const date = new Date();
   const today = date.toJSON();
@@ -158,7 +161,7 @@ export async function getDetails(
   try {
     const params = new URLSearchParams({
       api_key,
-      append_to_response: 'credits,release_dates,', // 'videos,images,',
+      append_to_response: 'credits,release_dates', // 'videos,images,',
       language,
     }).toString();
 
@@ -223,4 +226,22 @@ export async function postRating(media_type: MediaType, media_id: number, value:
   });
 
   return getDetails(media_type, media_id).then(o => o.vote_average);
+}
+
+/**
+ * Review
+ */
+export async function getReviews(movie_id: number) {
+  const params = new URLSearchParams({ page: `1`, api_key }).toString();
+  const req = await fetch(`https://api.themoviedb.org/3/movie/${movie_id}/reviews?${params}`);
+  return req.json();
+}
+
+/**
+ * Popular
+ */
+export async function getPopularMovies(page = 1): Promise<TmdbMovie[]> {
+  const params = new URLSearchParams({ page: `${page}`, api_key }).toString();
+  const req = await fetch(`https://api.themoviedb.org/3/movie/popular?${params}`);
+  return req.json().then(({ results }) => results);
 }

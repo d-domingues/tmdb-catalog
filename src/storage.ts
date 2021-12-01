@@ -1,22 +1,34 @@
 import { TmdbDataObj } from '../models/tmdb-data-obj.js';
 
-const RECENT_SEARCHES = Object.freeze('recent_searches');
-
-export function getRecentSearches(): (TmdbDataObj | string)[] {
-  return JSON.parse(localStorage.getItem(RECENT_SEARCHES) || '[]');
+interface SavedSearch {
+  timestamp: number;
+  data: TmdbDataObj | string;
 }
 
-export function putRecentSearches(option: TmdbDataObj | string) {
-  let opts: (TmdbDataObj | string)[] = getRecentSearches();
+const RECENT_SEARCHES = Object.freeze('recent_searches');
 
-  if (typeof option === 'string') {
-    opts = opts.filter(o => o !== option);
-    opts.unshift(option);
+export function getUpdatedSavedSearches(): SavedSearch[] {
+  let opts: SavedSearch[] = JSON.parse(localStorage.getItem(RECENT_SEARCHES) || '[]');
+  opts = opts.filter(o => new Date().getTime() - o.timestamp < 3600000);
+  localStorage.setItem(RECENT_SEARCHES, JSON.stringify(opts));
+  return opts;
+}
+
+export function getRecentSearches(): (TmdbDataObj | string)[] {
+  return getUpdatedSavedSearches().map(o => o.data);
+}
+
+export function putRecentSearches(data: TmdbDataObj | string) {
+  let opts: SavedSearch[] = getUpdatedSavedSearches();
+
+  if (typeof data === 'string') {
+    opts = opts.filter(o => o.data !== data);
+    opts.unshift({ timestamp: new Date().getTime(), data });
   }
 
-  if (typeof option !== 'string') {
-    opts = opts.filter(o => typeof o !== 'string' && o.id !== option.id);
-    opts.unshift(option);
+  if (typeof data !== 'string') {
+    opts = opts.filter(o => typeof o !== 'string' && (o.data as any).id !== data.id);
+    opts.unshift({ timestamp: new Date().getTime(), data });
   }
 
   if (opts.length >= 6) {

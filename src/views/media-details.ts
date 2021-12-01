@@ -1,10 +1,12 @@
+import '../components/loading-spinner.js';
+import '../components/mark-favorite.js';
+
 import { RouterLocation } from '@vaadin/router';
 import { html, LitElement } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
+
 import { getName, getYear, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
-import '../components/loading-spinner.js';
-import '../components/mark-favorite.js';
 import { imgSrc } from '../directives/img-directive.js';
 import { getRouter } from '../router.js';
 import { getDetails } from '../tmdb.api.js';

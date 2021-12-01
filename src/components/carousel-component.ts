@@ -1,7 +1,6 @@
 /* eslint-disable wc/guard-super-call */
 import { html, LitElement, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { classMap } from 'lit/directives/class-map.js';
 import { getMediaType, getName, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
 import styles from './carousel-component.styles.js';
@@ -61,7 +60,7 @@ export class CarouselComponent extends LitElement {
         ${this.slides.map(
           (_, idx) => html`
             <button
-              class=${classMap({ active: idx === this.slideIdx })}
+              class="${idx === this.slideIdx && 'active'}"
               @click=${() => this.restartInterval(idx)}
             ></button>
           `
