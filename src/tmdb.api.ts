@@ -242,6 +242,16 @@ export async function getReviews(movie_id: number) {
  */
 export async function getPopularMovies(page = 1): Promise<TmdbMovie[]> {
   const params = new URLSearchParams({ page: `${page}`, api_key }).toString();
-  const req = await fetch(`https://api.themoviedb.org/3/movie/popular?${params}`);
-  return req.json().then(({ results }) => results);
+
+  return fetch(`https://api.themoviedb.org/3/movie/popular?${params}`).then(resp =>
+    resp
+      .json()
+      .then(movies =>
+        Promise.all(
+          movies.results.map((movie: TmdbMovie) =>
+            getReviews(movie.id).then(({ results }) => ({ ...movie, reviews: results }))
+          )
+        )
+      )
+  );
 }

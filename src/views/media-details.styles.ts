@@ -16,6 +16,8 @@ const styles = css`
     margin: 14px 50px;
     color: white;
     font-size: 16px;
+    text-shadow: 1px 1px 2px black;
+    font-weight: bold;
   }
 
   #rating {

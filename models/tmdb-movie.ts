@@ -6,6 +6,7 @@ import {
   ProductionCompany,
   ProductionCountry,
   ReleaseDates,
+  Review,
   SpokenLanguage,
   Videos,
 } from './tmdb-data-obj.js';
@@ -29,6 +30,7 @@ export interface TmdbMovie {
   production_countries: ProductionCountry[];
   release_date: string;
   revenue: number;
+  reviews: Review[];
   runtime: number;
   spoken_languages: SpokenLanguage[];
   status: string;
