@@ -6,7 +6,7 @@ export type BackdropSize = 'w300' | 'w780' | 'w1280' | 'original';
 export type PosterSize = 'w45' | 'w92' | 'w154' | 'w185' | 'w300' | 'w500' | 'original';
 
 class ImgDirective extends Directive {
-  constructor(private part: PartInfo) {
+  constructor(public part: PartInfo) {
     super(part);
 
     if (part.type !== PartType.ATTRIBUTE) {
@@ -15,17 +15,11 @@ class ImgDirective extends Directive {
   }
 
   render(srcSuffix: string, size: BackdropSize | PosterSize = 'original', classes?: string) {
-    return html`<img
-      class=${ifDefined(classes)}
-      src="https://image.tmdb.org/t/p/${ifDefined(size)}${ifDefined(srcSuffix)}"
-      alt=""
-    />`;
+    return html`<img class=${ifDefined(classes)} src="https://image.tmdb.org/t/p/${ifDefined(size)}${ifDefined(srcSuffix)}" alt="" />`;
   }
 }
 
 export const imgDirective = directive(ImgDirective);
 
 export const imgSrc = (srcSuffix: any, size: BackdropSize | PosterSize = 'original') =>
-  (typeof srcSuffix === 'string'
-    ? `https://image.tmdb.org/t/p/${size}${srcSuffix}`
-    : nothing) as string;
+  (typeof srcSuffix === 'string' ? `https://image.tmdb.org/t/p/${size}${srcSuffix}` : nothing) as string;

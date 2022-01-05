@@ -1,12 +1,14 @@
+import './mark-favorite.js';
+import './star-rating.js';
+
 import { html, LitElement, PropertyValues } from 'lit';
 import { customElement, property, queryAsync } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
-import { getMediaType, getName, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
+
 import { imgSrc } from '../directives/img-directive.js';
+import { getMediaType, getName, isMovie, TmdbDataObj } from '../models/tmdb-data-obj.js';
 import { putRecentSearches } from '../storage.js';
-import './mark-favorite.js';
 import { suggestionOptionStyles } from './search-bar.styles.js';
-import './star-rating.js';
 
 @customElement('suggestion-options')
 export class SuggestionOptions extends LitElement {
@@ -37,22 +39,14 @@ export class SuggestionOptions extends LitElement {
   render() {
     return repeat(
       this.options,
-      opt => (typeof opt === 'string' ? opt : opt.id),
-      (opt, idx) =>
-        html`${typeof opt === 'string'
-          ? this.searchOptTmpl(opt, idx)
-          : this.detailOptTmpl(opt, idx)}`
+      (opt) => (typeof opt === 'string' ? opt : opt.id),
+      (opt, idx) => html`${typeof opt === 'string' ? this.searchOptTmpl(opt, idx) : this.detailOptTmpl(opt, idx)}`
     );
   }
 
   searchOptTmpl = (text: string, idx: number) =>
     html`
-      <a
-        selected=${idx === this.currentIdx}
-        class="search-option"
-        href="search-view/${text}"
-        @click=${() => putRecentSearches(text)}
-      >
+      <a selected=${idx === this.currentIdx} class="search-option" href="search-view/${text}" @click=${() => putRecentSearches(text)}>
         <span opttxt> ${text} </span>
         <span style="color: gray"> - Buscar</span>
       </a>

@@ -6,7 +6,7 @@ export const searchBarStyles = css`
     border: 2px solid #333333;
     border-radius: 20px;
     font-size: 14px;
-    background-image: url(assets/search-icon.svg);
+    background-image: url(/search-icon.svg);
     background-position: 8px center;
     background-repeat: no-repeat;
     background-size: 14px;

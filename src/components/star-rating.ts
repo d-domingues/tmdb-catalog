@@ -1,10 +1,10 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { getMediaType, getName, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
+import { getMediaType, getName, isMovie, TmdbDataObj } from '../models/tmdb-data-obj.js';
 import { postRating } from '../tmdb.api.js';
 import './confirmation-modal.js';
 import { ConfirmationModal } from './confirmation-modal.js';
-import { presentToast } from './tosat-bar.js';
+import { ToastUi } from './toast-ui';
 
 @customElement('star-rating')
 export class StarRating extends LitElement {
@@ -14,17 +14,17 @@ export class StarRating extends LitElement {
       width: 90px;
       cursor: pointer;
       display: block;
-      background: url(assets/shade-star.svg) repeat-x center left;
+      background: url(/shade-star.svg) repeat-x center left;
     }
 
     .star-filler {
       width: calc(var(--rating) * 10%);
       height: 100%;
-      background: url(assets/gold-star.svg) repeat-x center left;
+      background: url(/gold-star.svg) repeat-x center left;
     }
   `;
 
-  @property() item!: TmdbDataObj;
+  @property({ type: Object }) item!: TmdbDataObj;
   @state() rating = 0;
 
   constructor() {
@@ -33,9 +33,9 @@ export class StarRating extends LitElement {
     // these events do not need to be removed from the element:
     // since they will only fire on user interaction if the component
     // is not present no events will be fired (no possible leakage)
-    this.addEventListener('mousemove', e => this.onMouse(e));
+    this.addEventListener('mousemove', (e) => this.onMouse(e));
     this.addEventListener('mouseout', () => this.setRating());
-    this.addEventListener('click', e => this.confirmRating(e));
+    this.addEventListener('click', (e) => this.confirmRating(e));
   }
 
   firstUpdated() {
@@ -47,9 +47,7 @@ export class StarRating extends LitElement {
   }
 
   onMouse(e: any) {
-    this.rating = Math.ceil(
-      ((e.clientX - e.target.getBoundingClientRect().left) / this.clientWidth) * 10
-    );
+    this.rating = Math.ceil(((e.clientX - e.target.getBoundingClientRect().left) / this.clientWidth) * 10);
   }
 
   async confirmRating(e: MouseEvent) {
@@ -71,9 +69,9 @@ export class StarRating extends LitElement {
       const mediaType = getMediaType(this.item);
       try {
         this.rating = await postRating(mediaType, this.item.id, selectedRate);
-        presentToast('Rating sometido con éxito!');
+        ToastUi.present('Rating sometido con éxito!');
       } catch {
-        presentToast('Erro al intentar someter el Rating!', 'error');
+        ToastUi.present('Erro al intentar someter el Rating!', 'E');
       }
     }
   }

@@ -6,10 +6,20 @@ import { toastUiStyles } from './toast-ui.styles.js';
 export class ToastUi extends LitElement {
   static styles = toastUiStyles;
 
-  addToast(text: string) {
+  addToast(text: string, type: 'S' | 'E' | 'I' | 'W' = 'S') {
     const node = document.createElement('output');
 
     node.innerText = text;
+
+    switch (type) {
+      case 'E':
+        node.style.background = '#a70a0a';
+        break;
+      default:
+        node.style.background = '#4e7646';
+        break;
+    }
+
     node.addEventListener('animationend', (event: AnimationEvent) => {
       if (event.animationName === 'fade-out') {
         (event.target as HTMLOutputElement).remove();
@@ -23,11 +33,11 @@ export class ToastUi extends LitElement {
   static present = (() => {
     let cachedToastUi: ToastUi;
 
-    return (text: string, duration = 3000): Promise<ToastUi> =>
-      new Promise(res => {
+    return (text: string, type: 'S' | 'E' | 'I' | 'W' = 'S', duration = 3000): Promise<ToastUi> =>
+      new Promise((res) => {
         function addAndResolve() {
           cachedToastUi.style.setProperty('--duration', `${duration}`);
-          cachedToastUi.addToast(text);
+          cachedToastUi.addToast(text, type);
           res(cachedToastUi);
         }
 
@@ -37,7 +47,7 @@ export class ToastUi extends LitElement {
           cachedToastUi = document.createElement('toast-ui');
 
           const observer = new MutationObserver(([{ addedNodes }]) => {
-            const isHostRendred = Array.from(addedNodes).some(n => n instanceof ToastUi);
+            const isHostRendred = Array.from(addedNodes).some((n) => n instanceof ToastUi);
 
             if (isHostRendred) {
               observer.disconnect();

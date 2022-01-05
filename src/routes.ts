@@ -1,5 +1,6 @@
-import { Route } from '@vaadin/router';
 import './views/home-page.js';
+
+import { Route } from '@vaadin/router';
 
 export const routes: Route[] = [
   { path: '/', redirect: '/home-page' },

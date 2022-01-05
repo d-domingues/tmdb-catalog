@@ -1,6 +1,7 @@
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { buttonStyles } from '../cummon.styles.js';
+
+import { buttonStyles } from '../common.styles.js';
 import { confirmationModalStyles } from './confirmation-modal.styles.js';
 
 @customElement('confirmation-modal')
@@ -15,7 +16,7 @@ export class ConfirmationModal extends LitElement {
   show(content: string | TemplateResult<1>) {
     this.content = content;
     this.showModal = true;
-    return new Promise<boolean>(res => (this.resolve = res));
+    return new Promise<boolean>((res) => (this.resolve = res));
   }
 
   private onRespond(response: boolean) {
@@ -42,19 +43,14 @@ modalNode!.ontransitionstart = () => console.log('Transition started');
     modalNode!.ontransitionrun = () => console.log('Transition running');
     modalNode!.ontransitionend = () => console.log('Transition ended');
     } */
-    return new Promise(res => setTimeout(res, 0, modalNode));
+    return new Promise((res) => setTimeout(res, 0, modalNode));
   }
 
   render() {
     return html`
       <div id="confirm-modal" class=${this.showModal ? 'active' : ''}>
         <div id="modal-content">
-          <span
-            id="close-btn"
-            @click=${() => this.onRespond(false)}
-            @keyup=${() => this.onRespond(false)}
-            >&times;</span
-          >
+          <span id="close-btn" @click=${() => this.onRespond(false)} @keyup=${() => this.onRespond(false)}>&times;</span>
           ${this.content}
           <button @click=${() => this.onRespond(true)}>Sí</button>
           <button @click=${() => this.onRespond(false)}>No</button>

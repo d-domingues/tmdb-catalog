@@ -1,8 +1,8 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { getMediaType, getName, getYear, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
+import { getMediaType, getName, getYear, TmdbDataObj } from '../models/tmdb-data-obj.js';
 import { horizontalDisplaySyles } from './styles.js';
 
 @customElement('horizontal-display')
