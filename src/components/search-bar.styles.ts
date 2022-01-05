@@ -42,7 +42,6 @@ export const searchBarStyles = css`
 
   suggestion-options {
     display: block;
-    width: calc(100% - 4px);
     background: white;
     overflow: hidden;
     border: 2px solid #333333;

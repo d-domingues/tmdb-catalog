@@ -1,14 +1,15 @@
+import { Router } from '@vaadin/router';
 import { html, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ref } from 'lit/directives/ref.js';
 import './components/overlay-menu.js';
 import { movieCatalogStyles } from './movie-catalog.styles.js';
-import { setRouter } from './router.js';
 
 @customElement('movie-catalog')
 export class MovieCatalog extends LitElement {
   static styles = movieCatalogStyles;
 
+  @property() router!: Router;
   @property() show = false;
 
   onOpenMenu() {
@@ -34,9 +35,9 @@ export class MovieCatalog extends LitElement {
 
   render() {
     return html`
-      <overlay-menu .show=${this.show}></overlay-menu>
+      <overlay-menu .show=${this.show} @closemenu=${this.onCloseMenu}></overlay-menu>
       <header>${this.menuIconTmpl()}</header>
-      <main ${ref(setRouter)}></main>
+      <main ${ref((el: any) => this.router.setOutlet(el))}></main>
       <footer>
         Movie Catalog<br />
         Sopra Steria Lit Challenge using

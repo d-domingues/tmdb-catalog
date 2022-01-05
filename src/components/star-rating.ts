@@ -4,6 +4,7 @@ import { getMediaType, getName, isMovie, TmdbDataObj } from '../../models/tmdb-d
 import { postRating } from '../tmdb.api.js';
 import './confirmation-modal.js';
 import { ConfirmationModal } from './confirmation-modal.js';
+import { presentToast } from './tosat-bar.js';
 
 @customElement('star-rating')
 export class StarRating extends LitElement {
@@ -53,7 +54,7 @@ export class StarRating extends LitElement {
 
   async confirmRating(e: MouseEvent) {
     e.preventDefault();
-    const rated = this.rating;
+    const selectedRate = this.rating;
     const modal = await ConfirmationModal.generate();
 
     const isConfirmed = await modal.show(html`
@@ -61,13 +62,19 @@ export class StarRating extends LitElement {
       <p>
         Quieres atribuir a la ${isMovie(this.item) ? 'película' : 'série'}
         <b>${getName(this.item)}</b>
-        el rating de ${rated}?
+        el rating de ${selectedRate}?
       </p>
     `);
 
     // if confirmed submits the rated value and feaches the new "vote_average" from DB
     if (isConfirmed) {
-      this.rating = await postRating(getMediaType(this.item), this.item.id, rated);
+      const mediaType = getMediaType(this.item);
+      try {
+        this.rating = await postRating(mediaType, this.item.id, selectedRate);
+        presentToast('Rating sometido con éxito!');
+      } catch {
+        presentToast('Erro al intentar someter el Rating!', 'error');
+      }
     }
   }
 

@@ -19,6 +19,7 @@
     "analyze": "cem analyze --litelement"
   },
   "dependencies": {
+    "@lit-labs/motion": "^1.0.1",
     "@vaadin/router": "^1.7.4",
     "lit": "^2.0.0",
     "lodash-es": "^4.17.21"

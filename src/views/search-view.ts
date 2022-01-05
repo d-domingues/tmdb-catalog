@@ -2,10 +2,10 @@ import { RouterLocation } from '@vaadin/router';
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
+import { router } from '../../main.js';
 import { TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import '../components/search-bar.js';
 import { buttonStyles } from '../cummon.styles.js';
-import { getRouter } from '../router.js';
 import { fetchSearchMovies, fetchSearchTv } from '../tmdb.api.js';
 
 @customElement('search-view')
@@ -19,7 +19,7 @@ export class SearchView extends LitElement {
     `,
   ];
 
-  @property() location: RouterLocation = getRouter().location;
+  @property() location: RouterLocation = router.location;
   @state() page = 1;
 
   render() {

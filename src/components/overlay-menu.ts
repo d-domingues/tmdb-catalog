@@ -68,8 +68,6 @@ export class OverlayMenu extends LitElement {
 
   @property() show = false;
 
-  readonly parent = document.querySelector('movie-catalog');
-
   views = [
     { path: 'home-page', label: 'Inicio' },
     { path: 'search-view', label: 'Buscador' },
@@ -80,7 +78,7 @@ export class OverlayMenu extends LitElement {
   ];
 
   async onClose() {
-    (this.parent as any).show = false;
+    this.dispatchEvent(new CustomEvent('closemenu'));
   }
 
   render() {

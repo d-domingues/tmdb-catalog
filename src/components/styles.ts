@@ -19,8 +19,6 @@ export const horizontalDisplaySyles = css`
     flex-direction: column;
     justify-content: flex-end;
     position: relative;
-    --label-height: 36px;
-    --rating-height: 26px;
   }
 
   .movie-card a {
@@ -42,7 +40,7 @@ export const horizontalDisplaySyles = css`
   }
 
   .movie-card b.label {
-    height: var(--label-height);
+    height: 36px;
     font-size: 14px;
     word-break: break-word;
     line-height: 16px;

@@ -1,3 +1,4 @@
+import { session_id } from '../main.js';
 import { AccountStates } from '../models/account-states.js';
 import { HomePageVM } from '../models/home-page-vm.js';
 import { MediaType, TmdbDataObj } from '../models/tmdb-data-obj.js';
@@ -10,37 +11,42 @@ const headers = Object.freeze({
   'Content-Type': 'application/json',
 });
 
-let session_id = localStorage.getItem('session_id') as string;
+/**
+ * Obtains the session_id token for TMDB API
+ */
+export async function getSessionId(): Promise<string> {
+  try {
+    const params = new URLSearchParams({ api_key }).toString();
 
-(async () => {
-  const params = new URLSearchParams({ api_key }).toString();
+    const { request_token } = await fetch(
+      `https://api.themoviedb.org/3/authentication/token/new?${params}`
+    ).then(resp => resp.json());
 
-  const { request_token } = await fetch(
-    `https://api.themoviedb.org/3/authentication/token/new?${params}`
-  ).then(resp => resp.json());
-
-  await fetch(`https://api.themoviedb.org/3/authentication/token/validate_with_login?${params}`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
-      username: 'David_Lopes',
-      password: 'Th3M0v13DB',
-      request_token,
-    }),
-  });
-
-  const response = await fetch(
-    `https://api.themoviedb.org/3/authentication/session/new?${params}`,
-    {
+    await fetch(`https://api.themoviedb.org/3/authentication/token/validate_with_login?${params}`, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ request_token }),
-    }
-  ).then(resp => resp.json());
+      body: JSON.stringify({
+        username: 'David_Lopes',
+        password: 'Th3M0v13DB',
+        request_token,
+      }),
+    });
 
-  session_id = response.session_id;
-  localStorage.setItem('session_id', String(session_id));
-})();
+    const response = await fetch(
+      `https://api.themoviedb.org/3/authentication/session/new?${params}`,
+      {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ request_token }),
+      }
+    ).then(resp => resp.json());
+
+    return response.session_id;
+  } catch {
+    // TODO: alert
+    return '';
+  }
+}
 
 /**
  * Most popular movies in the last 3 months
@@ -59,6 +65,7 @@ export async function fetchDiscoverMovies() {
       sort_by: 'popularity.desc',
       include_adult: 'false',
       include_video: 'false',
+      language: 'es-ES',
     }).toString();
 
     const req = await fetch(`https://api.themoviedb.org/3/discover/movie?${params}`);
@@ -81,6 +88,7 @@ export async function fetchDiscoverTvShows() {
       'air_date.gte': threeMontsAgo,
       'air_date.lte': today,
       sort_by: 'popularity.desc',
+      language: 'es-ES',
     }).toString();
 
     const req = await fetch(`https://api.themoviedb.org/3/discover/tv?${params}`);
@@ -138,31 +146,23 @@ export async function fetchSearchTv(query: string, page = 1) {
 }
 
 export async function fetchSearchMulti(query: string) {
-  try {
-    const params = new URLSearchParams({
-      query,
-      api_key,
-      indexes: 'movies.en,tv_series.en',
-    }).toString();
+  const params = new URLSearchParams({
+    query,
+    api_key,
+    indexes: 'movies.en,tv_series.en',
+  }).toString();
 
-    const req = await fetch(`https://api.themoviedb.org/3/search/multi?${params}`);
-    const { results } = await req.json();
-    return results;
-  } catch (error) {
-    return [];
-  }
+  const req = await fetch(`https://api.themoviedb.org/3/search/multi?${params}`);
+  const { results } = await req.json();
+  return results;
 }
 
-export async function getDetails(
-  type: MediaType,
-  movie_id: number,
-  language = 'es-ES'
-): Promise<TmdbDataObj> {
+export async function getDetails(type: MediaType, movie_id: number): Promise<TmdbDataObj> {
   try {
     const params = new URLSearchParams({
       api_key,
       append_to_response: 'credits,release_dates', // 'videos,images,',
-      language,
+      language: 'es-ES',
     }).toString();
 
     const req = await fetch(`https://api.themoviedb.org/3/${type}/${movie_id}?${params}`);

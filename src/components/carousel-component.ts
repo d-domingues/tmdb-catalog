@@ -45,14 +45,12 @@ export class CarouselComponent extends LitElement {
   };
 
   render() {
+    this.style.setProperty('--slide', `${this.slideIdx}`);
+
     return html`
       ${this.slides.map(
         (item, idx) => html`
-          <img
-            style="--slide: ${this.slideIdx}; grid-area: slide${idx}"
-            src=${imgSrc(item.backdrop_path, 'w1280')}
-            alt=""
-          />
+          <img style="grid-area: slide${idx}" src=${imgSrc(item.backdrop_path, 'w1280')} alt="" />
         `
       )}
       ${this.titleTmpl()}
@@ -60,7 +58,7 @@ export class CarouselComponent extends LitElement {
         ${this.slides.map(
           (_, idx) => html`
             <button
-              class="${idx === this.slideIdx && 'active'}"
+              class="${idx === this.slideIdx ? 'active' : ''}"
               @click=${() => this.restartInterval(idx)}
             ></button>
           `

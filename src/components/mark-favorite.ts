@@ -11,12 +11,12 @@ export class MarkFavorite extends LitElement {
 
   @state() favorite = false;
 
-  async onClick(ev: MouseEvent) {
+  onClick(ev: MouseEvent) {
     ev.preventDefault();
 
     try {
       this.favorite = !this.favorite;
-      await markAsFavorite(this.mediaType, this.mediaId, this.favorite);
+      markAsFavorite(this.mediaType, this.mediaId, this.favorite);
     } catch (error) {
       // if fails the favorite state returns to the original value
       this.favorite = !this.favorite;

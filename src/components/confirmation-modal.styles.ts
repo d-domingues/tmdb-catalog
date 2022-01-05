@@ -19,7 +19,7 @@ export const confirmationModalStyles = css`
     pointer-events: all;
   }
 
-  .modal-content {
+  #modal-content {
     background-color: #fefefe;
     position: absolute;
     top: 40%;
@@ -32,19 +32,19 @@ export const confirmationModalStyles = css`
     transform: translate(-50%, -50%) scale(0);
   }
 
-  #confirm-modal.active .modal-content {
+  #confirm-modal.active #modal-content {
     transform: translate(-50%, -50%) scale(1);
   }
 
-  .close {
+  #close-btn {
     color: #aaaaaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
   }
 
-  .close:hover,
-  .close:focus {
+  #close-btn:hover,
+  #close-btn:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;

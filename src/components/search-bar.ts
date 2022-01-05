@@ -7,6 +7,7 @@ import { fetchSearchMulti } from '../tmdb.api.js';
 import { searchBarStyles } from './search-bar.styles.js';
 import './suggestion-options.js';
 import { SuggestionOptions } from './suggestion-options.js';
+import { presentToast } from './tosat-bar.js';
 
 @customElement('search-bar')
 export class SearchBar extends LitElement {
@@ -20,12 +21,17 @@ export class SearchBar extends LitElement {
   @query('suggestion-options') opts!: SuggestionOptions;
 
   private handleInput = debounce(async () => {
-    const queryTxt = this.inputEl?.value?.trim();
-    this.options = queryTxt
-      ? [queryTxt, ...(await fetchSearchMulti(queryTxt)).splice(0, 12)].splice(0, 8)
-      : [];
-    this.currentIdx = 0;
-    this.showSuggestions = !!this.options.length;
+    try {
+      const queryTxt = this.inputEl?.value?.trim();
+      this.options = queryTxt
+        ? [queryTxt, ...(await fetchSearchMulti(queryTxt)).splice(0, 12)].splice(0, 8)
+        : [];
+      this.currentIdx = 0;
+      this.showSuggestions = !!this.options.length;
+    } catch {
+      this.options = [];
+      presentToast('No se ha podido obtener los datos!');
+    }
   }, 400);
 
   onkeyPress(ev: KeyboardEvent) {
@@ -59,9 +65,9 @@ export class SearchBar extends LitElement {
         id="search-input"
         class=${this.showSuggestions && 'show'}
         placeholder="Buscar..."
-        @input=${() => this.handleInput()}
+        @input=${this.handleInput}
         @focus=${this.onInputFocus}
-        @blur=${() => (this.showSuggestions = false)}
+        @blur=${() => (this.showSuggestions = true)}
         @keyup=${this.onkeyPress}
       />
 
