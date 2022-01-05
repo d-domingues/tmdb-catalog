@@ -1,7 +1,9 @@
+import './confirmation-modal.js';
+
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { Review } from '../../models/tmdb-data-obj.js';
-import './confirmation-modal.js';
+
+import { Review } from '../models/tmdb-data-obj.js';
 
 @customElement('review-block')
 export class ReviewBlock extends LitElement {

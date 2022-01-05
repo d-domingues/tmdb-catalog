@@ -69,12 +69,12 @@ export class OverlayMenu extends LitElement {
   @property() show = false;
 
   views = [
-    { path: 'home-page', label: 'Inicio' },
-    { path: 'search-view', label: 'Buscador' },
-    { path: 'movie-list', label: 'Peliculas' },
-    { path: 'tv-shows', label: 'Series TV' },
-    { path: 'my-list', label: 'Mis Favoritos' },
-    { path: 'my-profile', label: 'Mi Perfil' },
+    { path: '/home-page', label: 'Inicio' },
+    { path: '/search-view', label: 'Buscador' },
+    { path: '/movie-list', label: 'Peliculas' },
+    { path: '/tv-shows', label: 'Series TV' },
+    { path: '/my-list', label: 'Mis Favoritos' },
+    { path: '/my-profile', label: 'Mi Perfil' },
   ];
 
   async onClose() {
@@ -86,11 +86,7 @@ export class OverlayMenu extends LitElement {
       <div id="menu-overlay" class=${this.show && 'active'}>
         <span id="close-btn" @click=${this.onClose} @keyup=${this.onClose}> &times; </span>
 
-        <nav id="menu-modal">
-          ${this.views.map(
-            ({ path, label }) => html` <a href=${path} @click=${this.onClose}> ${label} </a> `
-          )}
-        </nav>
+        <nav id="menu-modal">${this.views.map(({ path, label }) => html` <a href=${path} @click=${this.onClose}> ${label} </a> `)}</nav>
       </div>
     `;
   }

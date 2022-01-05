@@ -1,7 +1,7 @@
-/* eslint-disable no-shadow */
 import { TmdbMovie } from './tmdb-movie.js';
 import { TmdbTvShow } from './tmdb-tv-show.js';
 
+/* eslint-disable no-shadow */
 export enum MediaDepartment {
   Acting = 'Acting',
   Art = 'Art',
@@ -153,39 +153,28 @@ export type MediaType = 'movie' | 'tv';
 export type TmdbDataObj = TmdbMovie | TmdbTvShow;
 
 // Type guard
-export const isMovie = (obj: TmdbDataObj): obj is TmdbMovie =>
-  (obj as TmdbMovie).title !== undefined;
+export const isMovie = (obj: TmdbDataObj): obj is TmdbMovie => (obj as TmdbMovie).title !== undefined;
 
 // functional retrieving of nested properties
-export const getYear = (item: TmdbDataObj) =>
-  (isMovie(item) ? item?.release_date : item?.first_air_date)?.split('-')?.at(0) ?? '';
+export const getYear = (item: TmdbDataObj) => (isMovie(item) ? item?.release_date : item?.first_air_date)?.split('-')?.at(0) ?? '';
 
-export const getMediaType = (obj: TmdbDataObj): MediaType =>
-  (obj as TmdbMovie).media_type ?? isMovie(obj) ? 'movie' : 'tv';
+export const getMediaType = (obj: TmdbDataObj): MediaType => ((obj as TmdbMovie).media_type ?? isMovie(obj) ? 'movie' : 'tv');
 
-export const getName = (obj: TmdbDataObj): string =>
-  getMediaType(obj) === 'movie' ? (obj as TmdbMovie).title : (obj as TmdbTvShow).name;
+export const getName = (obj: TmdbDataObj): string => (getMediaType(obj) === 'movie' ? (obj as TmdbMovie).title : (obj as TmdbTvShow).name);
 
-export const director = (details: TmdbDataObj) =>
-  details?.credits?.crew?.find(({ job }) => job === 'Director')?.name ?? '-';
+export const director = (details: TmdbDataObj) => details?.credits?.crew?.find(({ job }) => job === 'Director')?.name ?? '-';
 
-export const productionCountries = (details: TmdbDataObj) =>
-  details?.production_countries?.map(p => p.name).join(', ') ?? '-';
+export const productionCountries = (details: TmdbDataObj) => details?.production_countries?.map((p) => p.name).join(', ') ?? '-';
 
 export const genres = (details: TmdbDataObj) => details?.genres;
 
-export const cast = (details: TmdbDataObj) =>
-  details?.credits?.cast?.sort((a, b) => b.popularity - a.popularity) ?? [];
+export const cast = (details: TmdbDataObj) => details?.credits?.cast?.sort((a, b) => b.popularity - a.popularity) ?? [];
 
 export const runtimeInHHMM = (details: TmdbDataObj) => {
   const value =
     isMovie(details) &&
     !Number.isNaN(details.runtime) &&
-    `${Math.floor(details.runtime / 60)}:${(details.runtime % 60)
-      ?.toString()
-      ?.concat('0')
-      ?.substr(0, 2)
-      ?.trim()}`;
+    `${Math.floor(details.runtime / 60)}:${(details.runtime % 60)?.toString()?.concat('0')?.substr(0, 2)?.trim()}`;
 
   return value ? ` | ${value}` : '';
 };

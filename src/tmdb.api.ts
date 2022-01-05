@@ -1,9 +1,9 @@
-import { session_id } from '../main.js';
-import { AccountStates } from '../models/account-states.js';
-import { HomePageVM } from '../models/home-page-vm.js';
-import { MediaType, TmdbDataObj } from '../models/tmdb-data-obj.js';
-import { TmdbMovie } from '../models/tmdb-movie.js';
-import { TmdbTvShow } from '../models/tmdb-tv-show.js';
+import { session_id } from './main.js';
+import { AccountStates } from './models/account-states.js';
+import { HomePageVM } from './models/home-page-vm.js';
+import { MediaType, TmdbDataObj } from './models/tmdb-data-obj.js';
+import { TmdbMovie } from './models/tmdb-movie.js';
+import { TmdbTvShow } from './models/tmdb-tv-show.js';
 
 const api_key = Object.freeze('a7aed79b85b4769070e70428a435f4bb');
 const headers = Object.freeze({
@@ -18,9 +18,7 @@ export async function getSessionId(): Promise<string> {
   try {
     const params = new URLSearchParams({ api_key }).toString();
 
-    const { request_token } = await fetch(
-      `https://api.themoviedb.org/3/authentication/token/new?${params}`
-    ).then(resp => resp.json());
+    const { request_token } = await fetch(`https://api.themoviedb.org/3/authentication/token/new?${params}`).then((resp) => resp.json());
 
     await fetch(`https://api.themoviedb.org/3/authentication/token/validate_with_login?${params}`, {
       method: 'POST',
@@ -32,14 +30,11 @@ export async function getSessionId(): Promise<string> {
       }),
     });
 
-    const response = await fetch(
-      `https://api.themoviedb.org/3/authentication/session/new?${params}`,
-      {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ request_token }),
-      }
-    ).then(resp => resp.json());
+    const response = await fetch(`https://api.themoviedb.org/3/authentication/session/new?${params}`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ request_token }),
+    }).then((resp) => resp.json());
 
     return response.session_id;
   } catch {
@@ -150,6 +145,7 @@ export async function fetchSearchMulti(query: string) {
     query,
     api_key,
     indexes: 'movies.en,tv_series.en',
+    language: 'es-ES',
   }).toString();
 
   const req = await fetch(`https://api.themoviedb.org/3/search/multi?${params}`);
@@ -185,27 +181,18 @@ export async function markAsFavorite(media_type: MediaType, media_id: number, fa
 /**
  * session user's rated and favorite info
  */
-export async function getAccountStates(
-  media_type: MediaType,
-  media_id: number
-): Promise<AccountStates> {
+export async function getAccountStates(media_type: MediaType, media_id: number): Promise<AccountStates> {
   const params = new URLSearchParams({ session_id, api_key }).toString();
 
-  return fetch(
-    `https://api.themoviedb.org/3/${media_type}/${media_id}/account_states?${params}`
-  ).then(resp => resp.json());
+  return fetch(`https://api.themoviedb.org/3/${media_type}/${media_id}/account_states?${params}`).then((resp) => resp.json());
 }
 
 export async function getFavorites(page = 1): Promise<{ movie: TmdbMovie[]; tv: TmdbTvShow[] }> {
   const params = new URLSearchParams({ session_id, page: `${page}`, api_key }).toString();
 
   return Promise.all([
-    fetch(`https://api.themoviedb.org/3/account/David_Lopes/favorite/movies?${params}`).then(resp =>
-      resp.json()
-    ),
-    fetch(`https://api.themoviedb.org/3/account/David_Lopes/favorite/tv?${params}`).then(resp =>
-      resp.json()
-    ),
+    fetch(`https://api.themoviedb.org/3/account/David_Lopes/favorite/movies?${params}`).then((resp) => resp.json()),
+    fetch(`https://api.themoviedb.org/3/account/David_Lopes/favorite/tv?${params}`).then((resp) => resp.json()),
   ]).then(([movie, tv]) => ({ movie: movie.results, tv: tv.results }));
 }
 
@@ -225,7 +212,7 @@ export async function postRating(media_type: MediaType, media_id: number, value:
     body: JSON.stringify({ value }),
   });
 
-  return getDetails(media_type, media_id).then(o => o.vote_average);
+  return getDetails(media_type, media_id).then((o) => o.vote_average);
 }
 
 /**
@@ -243,15 +230,11 @@ export async function getReviews(movie_id: number) {
 export async function getPopularMovies(page = 1): Promise<TmdbMovie[]> {
   const params = new URLSearchParams({ page: `${page}`, api_key }).toString();
 
-  return fetch(`https://api.themoviedb.org/3/movie/popular?${params}`).then(resp =>
+  return fetch(`https://api.themoviedb.org/3/movie/popular?${params}`).then((resp) =>
     resp
       .json()
-      .then(movies =>
-        Promise.all(
-          movies.results.map((movie: TmdbMovie) =>
-            getReviews(movie.id).then(({ results }) => ({ ...movie, reviews: results }))
-          )
-        )
+      .then((movies) =>
+        Promise.all(movies.results.map((movie: TmdbMovie) => getReviews(movie.id).then(({ results }) => ({ ...movie, reviews: results }))))
       )
   );
 }

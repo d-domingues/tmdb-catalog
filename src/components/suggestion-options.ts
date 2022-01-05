@@ -2,11 +2,11 @@ import './mark-favorite.js';
 import './star-rating.js';
 
 import { html, LitElement, PropertyValues } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, queryAsync } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 
-import { getMediaType, getName, isMovie, TmdbDataObj } from '../../models/tmdb-data-obj.js';
 import { imgSrc } from '../directives/img-directive.js';
+import { getMediaType, getName, isMovie, TmdbDataObj } from '../models/tmdb-data-obj.js';
 import { putRecentSearches } from '../storage.js';
 import { suggestionOptionStyles } from './search-bar.styles.js';
 
@@ -16,6 +16,8 @@ export class SuggestionOptions extends LitElement {
 
   @property() options!: (string | TmdbDataObj)[];
   @property({ type: Number }) currentIdx = 0;
+  @queryAsync('[selected="true"]') selectedOpt!: Promise<HTMLAnchorElement>;
+  @queryAsync('[selected="true"] [opttxt]') selectedOptText!: Promise<HTMLSpanElement>;
 
   getItemName = (item: string | TmdbDataObj) => (typeof item === 'string' ? item : getName(item));
 
@@ -28,43 +30,23 @@ export class SuggestionOptions extends LitElement {
     return null;
   };
 
-  getSelectedOptionLink(): HTMLAnchorElement | null | undefined {
-    return this.shadowRoot?.querySelector('[selected="true"]');
-  }
-
-  getSelectedOptionText() {
-    return (
-      this.shadowRoot?.querySelector('[selected="true"] [opttxt]') as HTMLSpanElement
-    )?.innerText?.trim();
-  }
-
   updated(values: PropertyValues) {
     if (values.has('currentIdx')) {
-      this.dispatchEvent(
-        new CustomEvent('selectionChange', { detail: this.getSelectedOptionText() })
-      );
+      this.dispatchEvent(new Event('selectionChange'));
     }
   }
 
   render() {
     return repeat(
       this.options,
-      opt => (typeof opt === 'string' ? opt : opt.id),
-      (opt, idx) =>
-        html`${typeof opt === 'string'
-          ? this.searchOptTmpl(opt, idx)
-          : this.detailOptTmpl(opt, idx)}`
+      (opt) => (typeof opt === 'string' ? opt : opt.id),
+      (opt, idx) => html`${typeof opt === 'string' ? this.searchOptTmpl(opt, idx) : this.detailOptTmpl(opt, idx)}`
     );
   }
 
   searchOptTmpl = (text: string, idx: number) =>
     html`
-      <a
-        selected=${idx === this.currentIdx}
-        class="search-option"
-        href="search-view/${text}"
-        @click=${() => putRecentSearches(text)}
-      >
+      <a selected=${idx === this.currentIdx} class="search-option" href="search-view/${text}" @click=${() => putRecentSearches(text)}>
         <span opttxt> ${text} </span>
         <span style="color: gray"> - Buscar</span>
       </a>
