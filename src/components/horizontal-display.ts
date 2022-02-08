@@ -16,8 +16,9 @@ export class HorizontalDisplay extends LitElement {
     return html`
       <h5>${this.title}</h5>
 
-      ${this.items.map(
-        (item) => html`
+      <div class="grid">
+        ${this.items.map(
+          (item) => html`
           <div class="movie-card">
             <a href="details/${getMediaType(item)}/${item.id}">
               <img src=${imgSrc(item.poster_path, 'w185')} alt="" />
@@ -29,8 +30,10 @@ export class HorizontalDisplay extends LitElement {
             </span>
             <mark-favorite size="18" mediaId=${item.id} mediaType=${getMediaType(item)}></mark-favorite>
           </div>
-        `
-      )}
+          </div>
+          `
+        )}
+      </div>
     `;
   }
 }

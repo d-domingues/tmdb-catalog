@@ -1,16 +1,15 @@
 import { css } from 'lit';
 
 export const horizontalDisplaySyles = css`
-  :host {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 24px 8px;
+  h5 {
+    margin-bottom: 8px;
+    text-align: start;
   }
 
-  h5 {
-    grid-column: span 5 / auto;
-    margin-bottom: 0px;
-    text-align: start;
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 24px 8px;
   }
 
   .movie-card {
@@ -31,8 +30,7 @@ export const horizontalDisplaySyles = css`
     width: 100%;
     border-radius: 6px;
     background: black;
-    box-shadow: rgb(0 0 0 / 40%) 0px 2px 4px, rgb(0 0 0 / 30%) 0px 7px 13px -3px,
-      rgb(0 0 0 / 20%) 0px -3px 0px inset;
+    box-shadow: rgb(0 0 0 / 40%) 0px 2px 4px, rgb(0 0 0 / 30%) 0px 7px 13px -3px, rgb(0 0 0 / 20%) 0px -3px 0px inset;
   }
 
   .movie-card a img:hover {
@@ -59,21 +57,5 @@ export const horizontalDisplaySyles = css`
     display: flex;
     justify-content: center;
     column-gap: 4px;
-  }
-
-  /* Responsive for mobile devices */
-  @media only screen and (max-width: 600px) {
-    :host {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    h5 {
-      grid-column: span 3;
-    }
-
-    .movie-card b.label {
-      font-size: 10px;
-      line-height: 10px;
-    }
   }
 `;

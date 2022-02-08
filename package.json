@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "npm run build && vite preview"
+    "preview": "npm run build && vite preview",
+    "test": "tsc -p tsconfig.test.json && wtr test/**/*.test.js --node-resolve"
   },
   "dependencies": {
     "@vaadin/router": "^1.7.4",
@@ -12,8 +13,17 @@
     "lodash-es": "^4.17.21"
   },
   "devDependencies": {
+    "@open-wc/testing": "^3.0.0-next.5",
+    "@stylelint/postcss-css-in-js": "^0.37.2",
     "@types/lodash-es": "^4.17.5",
     "@types/node": "^17.0.7",
+    "@web/test-runner": "^0.13.27",
+    "autoprefixer": "^10.4.2",
+    "postcss": "^8.4.5",
+    "postcss-discard-comments": "^5.0.1",
+    "postcss-discard-empty": "^5.0.1",
+    "postcss-syntax": "^0.36.2",
+    "tailwindcss": "^3.0.15",
     "typescript": "^4.5.4",
     "vite": "^2.7.2"
   }

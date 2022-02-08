@@ -1,6 +1,6 @@
 import { css } from 'lit';
 
-export const confirmationModalStyles = css`
+export const modalUiStyles = css`
   #confirm-modal {
     position: fixed;
     z-index: 100;
@@ -19,20 +19,20 @@ export const confirmationModalStyles = css`
     pointer-events: all;
   }
 
-  #modal-content {
+  #confirm-modal.active > #modal-content {
     background-color: #fefefe;
     position: absolute;
     top: 40%;
     left: 50%;
     padding: 20px;
     border: 1px solid #888;
-    width: 40%;
+    width: min(80%, 500px);
     /* animation */
     transition: all 200ms ease-in-out;
     transform: translate(-50%, -50%) scale(0);
   }
 
-  #confirm-modal.active #modal-content {
+  #confirm-modal.active > #modal-content {
     transform: translate(-50%, -50%) scale(1);
   }
 

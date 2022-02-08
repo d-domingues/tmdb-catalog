@@ -1,10 +1,10 @@
 import { css, html, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
+
 import { getMediaType, getName, isMovie, TmdbDataObj } from '../models/tmdb-data-obj.js';
 import { postRating } from '../tmdb.api.js';
-import './confirmation-modal.js';
-import { ConfirmationModal } from './confirmation-modal.js';
-import { ToastUi } from './toast-ui';
+import { ModalUi } from './modal-ui.js';
+import { ToastUi } from './toast-ui.js';
 
 @customElement('star-rating')
 export class StarRating extends LitElement {
@@ -25,54 +25,69 @@ export class StarRating extends LitElement {
   `;
 
   @property({ type: Object }) item!: TmdbDataObj;
-  @state() rating = 0;
+
+  private set rating(value: number) {
+    this.item.vote_average = value;
+    this.requestUpdate();
+  }
+
+  private get rating() {
+    return this.item.vote_average;
+  }
 
   constructor() {
     super();
 
+    let origValue = 0;
+    let resetOrigValue = true;
+
     // these events do not need to be removed from the element:
     // since they will only fire on user interaction if the component
     // is not present no events will be fired (no possible leakage)
-    this.addEventListener('mousemove', (e) => this.onMouse(e));
-    this.addEventListener('mouseout', () => this.setRating());
-    this.addEventListener('click', (e) => this.confirmRating(e));
+    this.addEventListener('mouseover', () => (origValue = this.rating));
+    this.addEventListener('mouseout', () => resetOrigValue && (this.rating = origValue));
+    this.addEventListener('mousemove', (e) => (this.rating = this.claculateRating(e)));
+    this.addEventListener('click', async (e) => {
+      resetOrigValue = false;
+      const confirmed = await this.confirmRating(e);
+      resetOrigValue = true;
+      // if confirmed submits the rated value and feaches the new "vote_average" from DB
+      if (confirmed) {
+        const newVoteAvg = await this.submiteRating();
+        this.rating = newVoteAvg ?? origValue;
+        return;
+      }
+
+      this.rating = origValue;
+    });
   }
 
-  firstUpdated() {
-    this.setRating();
+  claculateRating(e: any) {
+    return Math.ceil(((e.clientX - this.getBoundingClientRect().left) / this.clientWidth) * 10);
   }
 
-  setRating() {
-    this.rating = this.item.vote_average;
-  }
-
-  onMouse(e: any) {
-    this.rating = Math.ceil(((e.clientX - e.target.getBoundingClientRect().left) / this.clientWidth) * 10);
-  }
-
-  async confirmRating(e: MouseEvent) {
+  confirmRating(e: MouseEvent) {
     e.preventDefault();
-    const selectedRate = this.rating;
-    const modal = await ConfirmationModal.generate();
 
-    const isConfirmed = await modal.show(html`
+    return ModalUi.present(html`
       <b>Someter el rating</b>
       <p>
         Quieres atribuir a la ${isMovie(this.item) ? 'película' : 'série'}
         <b>${getName(this.item)}</b>
-        el rating de ${selectedRate}?
+        el rating de ${this.rating}?
       </p>
     `);
+  }
 
-    // if confirmed submits the rated value and feaches the new "vote_average" from DB
-    if (isConfirmed) {
+  async submiteRating() {
+    try {
       const mediaType = getMediaType(this.item);
-      try {
-        this.rating = await postRating(mediaType, this.item.id, selectedRate);
-        ToastUi.present('Rating sometido con éxito!');
-      } catch {
-        ToastUi.present('Erro al intentar someter el Rating!', 'E');
-      }
+      const newRating = await postRating(mediaType, this.item.id, this.rating);
+      ToastUi.present('Rating sometido con éxito!');
+      return newRating;
+    } catch {
+      ToastUi.present('Erro al intentar someter el Rating!', 'E');
+      return null;
     }
   }
 

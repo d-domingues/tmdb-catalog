@@ -30,7 +30,7 @@ export class SearchBar extends LitElement {
       this.showSuggestions = !!this.options.length;
     } catch {
       this.options = [];
-      ToastUi.present('No se ha podido obtener los datos!');
+      ToastUi.present('No se han podido obtener los datos!');
     }
   }, 400);
 
@@ -65,9 +65,10 @@ export class SearchBar extends LitElement {
   render() {
     return html`
       <input
+        type="search"
         id="search-input"
-        class=${this.showSuggestions && 'show'}
         placeholder="Buscar..."
+        class=${this.showSuggestions && 'show'}
         @input=${this.handleInput}
         @focus=${this.onInputFocus}
         @blur=${() => (this.showSuggestions = true)}

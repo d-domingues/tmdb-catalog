@@ -3,7 +3,7 @@ import '../components/mark-favorite.js';
 
 import { RouterLocation } from '@vaadin/router';
 import { html, LitElement } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, query } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 
 import { ToastUi } from '../components/toast-ui.js';
@@ -26,7 +26,7 @@ import styles from './media-details.styles.js';
 export class MediaDetails extends LitElement {
   static styles = styles;
 
-  @property() location: RouterLocation = router.location;
+  location: RouterLocation = router.location;
   @query('#cast-scroller') castScroller!: HTMLDivElement;
 
   moveScroller = (to: number) => this.castScroller.scrollBy({ left: this.castScroller.offsetWidth * to });

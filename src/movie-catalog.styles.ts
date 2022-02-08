@@ -26,7 +26,7 @@ export const movieCatalogStyles = css`
   }
 
   main {
-    max-width: 1000px;
+    max-width: min(1000px, 100vw - 12px);
     margin: 58px auto 40px;
     min-height: calc(100vh - 210px);
     position: relative;
@@ -39,12 +39,5 @@ export const movieCatalogStyles = css`
     color: white;
     height: 100px;
     padding-top: 20px;
-  }
-
-  /* Responsive for mobile devices */
-  @media only screen and (max-width: 600px) {
-    main {
-      margin: 58px 8px 28px;
-    }
   }
 `;
