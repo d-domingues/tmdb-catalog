@@ -43,3 +43,9 @@ export class MarkFavorite extends LitElement {
     `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'mark-favorite': MarkFavorite;
+  }
+}

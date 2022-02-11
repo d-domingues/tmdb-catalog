@@ -1,10 +1,8 @@
-import './components/loading-spinner.js';
-import './movie-catalog.js';
-
 import { Router } from '@vaadin/router';
 import { html, render } from 'lit';
-
+import './components/loading-spinner.js';
 import { routes } from './routes.js';
+import './tmdb-catalog.js';
 import { getSessionId } from './tmdb.api.js';
 
 render(html`<loading-spinner></loading-spinner>`, document.body);
@@ -29,5 +27,5 @@ export let router = new Router();
   }
 
   // bootstraps the application component
-  render(html`<movie-catalog .router=${router}></movie-catalog>`, document.body);
+  render(html`<tmdb-catalog .router=${router}></tmdb-catalog>`, document.body);
 })();

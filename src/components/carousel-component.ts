@@ -26,15 +26,12 @@ export class CarouselComponent extends LitElement {
 
   restartInterval(val: number) {
     clearInterval(this.intervalId);
-
     this.slideIdx = val;
-
-    this.intervalId = setInterval(() => (this.slideIdx = (this.slideIdx + 1) % this.slides.length), 5000);
+    this.intervalId = setInterval(() => (this.slideIdx = (this.slideIdx + 1) % this.slides.length), 4000);
   }
 
   titleTmpl = () => {
     const item = this.slides[this.slideIdx];
-
     return item ? html`<a class="title" href="details/${getMediaType(item)}/${item.id}">${getName(item)}</a>` : nothing;
   };
 
@@ -42,11 +39,11 @@ export class CarouselComponent extends LitElement {
     this.style.setProperty('--slide', `${this.slideIdx}`);
 
     return html`
-      ${this.slides.map((item, idx) => html` <img style="grid-area: slide${idx}" src=${imgSrc(item.backdrop_path, 'w1280')} alt="" /> `)}
+      ${this.slides.map((item, idx) => html`<img style="grid-area: slide${idx}" src=${imgSrc(item.backdrop_path, 'w1280')} alt="" />`)}
       ${this.titleTmpl()}
       <div class="slide-btns">
         ${this.slides.map(
-          (_, idx) => html` <button class="${idx === this.slideIdx ? 'active' : ''}" @click=${() => this.restartInterval(idx)}></button> `
+          (_, idx) => html`<button class="${idx === this.slideIdx ? 'active' : ''}" @click=${() => this.restartInterval(idx)}></button>`
         )}
       </div>
     `;

@@ -78,14 +78,13 @@ export class OverlayMenu extends LitElement {
   ];
 
   async onClose() {
-    this.dispatchEvent(new CustomEvent('closemenu'));
+    this.dispatchEvent(new Event('closemenu'));
   }
 
   render() {
     return html`
-      <div id="menu-overlay" class=${this.show && 'active'}>
+      <div id="menu-overlay" class=${this.show ? 'active' : ''}>
         <span id="close-btn" @click=${this.onClose} @keyup=${this.onClose}> &times; </span>
-
         <nav id="menu-modal">${this.views.map(({ path, label }) => html` <a href=${path} @click=${this.onClose}> ${label} </a> `)}</nav>
       </div>
     `;

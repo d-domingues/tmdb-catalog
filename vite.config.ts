@@ -12,7 +12,7 @@ export default defineConfig({
 /*
 build: {
   lib: {
-    entry: 'src/movie-catalog.ts',
+    entry: 'src/tmdb-catalog.ts',
     formats: ['es'],
   },
   rollupOptions: {

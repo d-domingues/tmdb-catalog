@@ -5,7 +5,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "npm run build && vite preview",
-    "test": "tsc -p tsconfig.test.json && wtr test/**/*.test.js --node-resolve"
+    "test": "tsc -p tsconfig.test.json && wtr"
   },
   "dependencies": {
     "@vaadin/router": "^1.7.4",
@@ -17,6 +17,7 @@
     "@stylelint/postcss-css-in-js": "^0.37.2",
     "@types/lodash-es": "^4.17.5",
     "@types/node": "^17.0.7",
+    "@web/dev-server-import-maps": "0.0.6",
     "@web/test-runner": "^0.13.27",
     "autoprefixer": "^10.4.2",
     "postcss": "^8.4.5",

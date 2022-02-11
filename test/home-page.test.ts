@@ -1,11 +1,12 @@
 import '../src/views/home-page.js';
 
-import { aTimeout, elementUpdated, expect, fixture } from '@open-wc/testing';
+import { expect, fixture, waitUntil } from '@open-wc/testing';
 import { html } from 'lit';
 
 import { HorizontalDisplay } from '../src/components/horizontal-display.js';
+import { CarouselComponent } from './../src/components/carousel-component.js';
 
-describe('HorizontalDisplay', () => {
+describe('HomePage', () => {
   let element: import('../src/views/home-page.js').HomePage;
 
   beforeEach(async () => {
@@ -13,26 +14,38 @@ describe('HorizontalDisplay', () => {
   });
 
   it('loader component present', async () => {
-    expect(element.getElementsByTagName('loading-spinner')).to.exist;
+    expect(element.renderRoot.querySelector('loading-spinner')).to.exist;
   });
 
-  it('fetches data', async () => {
-    const horizontalDisp: HorizontalDisplay = element.shadowRoot?.querySelector(
-      'horizontal-display'
-    ) as HorizontalDisplay;
+  describe('HomePage children rendered', () => {
+    beforeEach(async () => {
+      // needs to wait until the data is fetched before rendering the child elements
+      await waitUntil(() => element.renderRoot.children.length > 1, 'Element did not render children', {
+        interval: 100,
+      });
+    });
 
-    expect(horizontalDisp.items).to.have.length(1);
+    it('loader removed', async () => {
+      expect(element.renderRoot.querySelector('loading-spinner')).to.not.exist;
+    });
 
-    await aTimeout(0);
-    await elementUpdated(element);
+    it('lightDom rendered', () => {
+      expect(element).shadowDom.to.equal(`
+        <search-bar> </search-bar>
+        <carousel-component style="--slide:0;"> </carousel-component>
+        <horizontal-display title="Novedades"> </horizontal-display>
+        <horizontal-display title="Series"> </horizontal-display>
+      `);
+    });
+
+    it('CarouselComponent 1st slide title is MOVIE 1', () => {
+      const carousel: CarouselComponent = element.renderRoot.querySelector('carousel-component');
+      expect(carousel.renderRoot.querySelector('.title').textContent).to.be.equal('MOVIE 1');
+    });
+
+    it('HorizontalDisplay has 1 element', () => {
+      const horizDisp1: HorizontalDisplay = element.renderRoot.querySelector('horizontal-display');
+      expect(horizDisp1.items).to.have.length(1);
+    });
   });
-
-  /*   it('fetches data', async () => {
-    expect(element.tmdb.carousel).to.be.empty;
-    console.log('>>>>>>>>>>>', element.tmdb.carousel);
-
-    await elementUpdated(element);
-    expect(element.tmdb.carousel).to.be.empty;
-    console.log('>>>>>>>>>>>', element.tmdb.carousel);
-  }); */
 });

@@ -1,6 +1,6 @@
 import { css } from 'lit';
 
-export const movieCatalogStyles = css`
+export const tmdbCatalogStyles = css`
   :host {
     font-size: calc(4px + 2vmin);
     color: #1a2b42;
@@ -15,13 +15,13 @@ export const movieCatalogStyles = css`
     top: 0px;
   }
 
-  header img {
+  header > img {
     cursor: pointer;
     float: right;
     padding: 10px;
   }
 
-  header img:hover {
+  header > img:hover {
     background-color: #adaaff80;
   }
 

@@ -1,8 +1,7 @@
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-
 import { buttonStyles } from '../common.styles.js';
-import { modalUiStyles } from './confirmation-modal.styles.js';
+import { modalUiStyles } from './modal-ui.styles.js';
 
 @customElement('modal-ui')
 export class ModalUi extends LitElement {
@@ -14,7 +13,7 @@ export class ModalUi extends LitElement {
   private resolve!: (value: boolean) => void;
 
   private onOpen(content: string | TemplateResult<1>) {
-    setTimeout(() => (this.isActive = true), 0);
+    setTimeout(() => (this.isActive = true));
     this.content = content;
     return new Promise<boolean>((res) => (this.resolve = res));
   }
